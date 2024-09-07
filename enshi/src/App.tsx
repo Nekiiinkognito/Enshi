@@ -2,7 +2,6 @@ import "./App.css";
 import "@radix-ui/themes/styles.css";
 import {
     Badge,
-    Box,
     Button,
     Callout,
     Card,
@@ -35,7 +34,7 @@ function App() {
             </Flex>
 
             <Container>
-                <Card className="w-full absolute top-10">
+                <Card className="w-full top-10">
                     <Form.Root className="FormRoot">
                         <Form.Field className="FormField" name="email">
                             <div
