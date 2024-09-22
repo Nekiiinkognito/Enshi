@@ -2,23 +2,29 @@ import "./App.css";
 import "@radix-ui/themes/styles.css";
 import {
     Badge,
+    Box,
     Button,
     Callout,
-    Card,
     Container,
     Flex,
+    Separator,
     Text,
-    TextArea,
-    TextField,
     Theme,
     ThemePanel,
 } from "@radix-ui/themes";
 
 import { useTranslation } from "react-i18next";
-import * as Form from "@radix-ui/react-form";
+import { useEffect, useRef, useState } from "react";
+import parse from "html-react-parser";
+import Quill from "quill/core";
+import Editor from "./Components/Editor/Editor";
+
+const Delta = Quill.import("delta");
 
 function App() {
     const { t } = useTranslation();
+    const [value, setValue] = useState<string>();
+    const first = useRef(null);
 
     return (
         <Theme className="h-fit" accentColor="indigo" grayColor="slate">
@@ -33,7 +39,7 @@ function App() {
                 </Callout.Root>
             </Flex>
 
-            <Container>
+            {/* <Container>
                 <Card className="w-full top-10">
                     <Form.Root className="FormRoot">
                         <Form.Field className="FormField" name="email">
@@ -97,8 +103,19 @@ function App() {
                         </Form.Submit>
                     </Form.Root>
                 </Card>
-            </Container>
+            </Container> */}
+            <>
+                <Container>
+                    <Editor />
+                </Container>
+            </>
 
+            <>
+                <Container className="mt-4">
+                    <Separator orientation={"horizontal"} className="w-full" />
+                    {parse(value || "")}
+                </Container>
+            </>
             <ThemePanel />
         </Theme>
     );
