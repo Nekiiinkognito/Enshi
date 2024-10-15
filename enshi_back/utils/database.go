@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // Pgx connection to database
 var Dbx *pgxpool.Pool
+var Dbx_connection *pgx.Conn
 
 func SetupDatabase() error {
 
@@ -29,6 +31,7 @@ func SetupDatabase() error {
 
 	// Connecting to database
 	Dbx, err = pgxpool.New(context.Background(), url)
+	Dbx_connection, err = pgx.Connect(context.Background(), url)
 
 	if err != nil {
 		fmt.Println("Unable to connect")
