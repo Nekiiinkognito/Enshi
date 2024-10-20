@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	db_repo "enshi/db"
+	db_repo "enshi/db/go_queries"
 	"enshi/utils"
 	"fmt"
 
@@ -34,6 +34,7 @@ func main() {
 	defer tx.Rollback(context.Background())
 
 	repo := db_repo.New(tx)
+
 	users, _ := repo.GetAllUsers(context.Background())
 
 	for _, user := range users {

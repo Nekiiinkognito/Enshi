@@ -5,7 +5,7 @@ COMMENT ON SCHEMA "public" IS 'standard public schema';
 -- Create "categories" table
 CREATE TABLE "public"."categories" ("category_id" integer NOT NULL, "category_name" character varying(50) NOT NULL, PRIMARY KEY ("category_id"), CONSTRAINT "categories_category_name_key" UNIQUE ("category_name"));
 -- Create "users" table
-CREATE TABLE "public"."users" ("user_id" bigint NOT NULL, "username" character varying(50) NOT NULL, "email" character varying(100) NOT NULL, "password" character varying(255) NOT NULL, "created_at" timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY ("user_id"), CONSTRAINT "users_email_key" UNIQUE ("email"), CONSTRAINT "users_username_key" UNIQUE ("username"));
+CREATE TABLE "public"."users" ("user_id" bigint NOT NULL, "username" character varying(50) NOT NULL, "email" character varying(100) NOT NULL, "password" character varying(255) NOT NULL, "created_at" timestamp NULL DEFAULT CURRENT_TIMESTAMP, "is_admin" boolean NOT NULL, PRIMARY KEY ("user_id"), CONSTRAINT "users_email_key" UNIQUE ("email"), CONSTRAINT "users_username_key" UNIQUE ("username"));
 -- Create "blogs" table
 CREATE TABLE "public"."blogs" ("blog_id" bigint NOT NULL, "user_id" bigint NOT NULL, "title" character varying(255) NULL, "description" text NULL, "category_id" integer NULL, "created_at" timestamp NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY ("blog_id"), CONSTRAINT "blogs_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "public"."categories" ("category_id") ON UPDATE NO ACTION ON DELETE NO ACTION, CONSTRAINT "blogs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("user_id") ON UPDATE NO ACTION ON DELETE CASCADE);
 -- Create "posts" table

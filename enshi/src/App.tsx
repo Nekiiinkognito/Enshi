@@ -12,11 +12,6 @@ import {
     ThemePanel,
 } from "@radix-ui/themes";
 
-import { useTranslation } from "react-i18next";
-import { useRef, useState } from "react";
-import parse from "html-react-parser";
-import Editor from "./Components/Editor/Editor";
-
 import {
     Router,
     Route,
