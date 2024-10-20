@@ -25,4 +25,6 @@ CREATE TABLE "public"."post_tags" ("post_id" bigint NOT NULL, "tag_id" integer N
 -- Create "post_votes" table
 CREATE TABLE "public"."post_votes" ("post_id" bigint NOT NULL, "user_id" bigint NOT NULL, "vote" boolean NOT NULL, PRIMARY KEY ("post_id", "user_id"), CONSTRAINT "post_votes_post_id_fkey" FOREIGN KEY ("post_id") REFERENCES "public"."posts" ("post_id") ON UPDATE NO ACTION ON DELETE NO ACTION, CONSTRAINT "post_votes_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("user_id") ON UPDATE NO ACTION ON DELETE NO ACTION);
 -- Create "profiles" table
-CREATE TABLE "public"."profiles" ("profile_id" bigint NOT NULL, "user_id" bigint NULL, "bio" text NULL, "avatar_url" character varying(255) NULL, "website_url" character varying(100) NULL, PRIMARY KEY ("profile_id"), CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("user_id") ON UPDATE NO ACTION ON DELETE CASCADE);
+CREATE TABLE "public"."profiles" ("profile_id" bigint NOT NULL, "user_id" bigint NOT NULL, "bio" text NULL, "avatar_url" character varying(255) NULL, "website_url" character varying(100) NULL, PRIMARY KEY ("profile_id"), CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users" ("user_id") ON UPDATE NO ACTION ON DELETE CASCADE);
+-- Create index "profiles_user_id_idx" to table: "profiles"
+CREATE UNIQUE INDEX "profiles_user_id_idx" ON "public"."profiles" ("user_id");

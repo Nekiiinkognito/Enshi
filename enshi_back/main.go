@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// Transaction
-	tx, _ := utils.Dbx_connection.Begin(context.Background())
+	tx, _ := utils.Dbx.Begin(context.Background())
 	defer tx.Rollback(context.Background())
 
 	repo := db_repo.New(tx)

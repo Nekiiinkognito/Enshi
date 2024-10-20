@@ -206,7 +206,7 @@ func registerUser(c *gin.Context) {
 
 	rowsToClose, errr := Dbx.Query(context.Background(), "INSERT INTO users "+
 		"(user_id, username, user_name, user_password) "+
-		"VALUES($1, $2, $3, $4);", newUuid, body.Username, body.Name, hashedPassword.stringToStore)
+		"VALUES($1, $2, $3, $4);", newUuid, body.Username, body.Name, hashedPassword.StringToStore)
 
 	if errr != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": errr.Error()})

@@ -20,9 +20,9 @@ type Argon2Hash struct {
 }
 
 type HashSalt struct {
-	hash          []byte
+	Hash          []byte
 	salt          []byte
-	stringToStore string
+	StringToStore string
 }
 
 // Initializer for algorithm
@@ -75,7 +75,7 @@ func (a *Argon2Hash) HashGen(password, salt []byte) (*HashSalt, error) {
 	stringToStore := fmt.Sprintf("$m=%d,t=%d$%s$%s", a.memory, a.time, saltDecoded, hashDecoded)
 
 	// This is unnecessary structure i created following the guide 0_0
-	return &HashSalt{hash: hash, salt: salt, stringToStore: stringToStore}, nil
+	return &HashSalt{Hash: hash, salt: salt, StringToStore: stringToStore}, nil
 
 }
 
@@ -91,7 +91,7 @@ func (a *Argon2Hash) Compare(hash, salt, password []byte) error {
 	}
 
 	// Comparing hashes
-	if !bytes.Equal(hash, hashSalt.hash) {
+	if !bytes.Equal(hash, hashSalt.Hash) {
 		return fmt.Errorf("invalid password (hashes does not match)")
 	}
 
@@ -153,6 +153,6 @@ func Test() {
 	}
 
 	// fmt.Println(testDbString)
-	fmt.Printf("%s", cringe.stringToStore)
+	fmt.Printf("%s", cringe.StringToStore)
 	fmt.Print("\n\n\n\n")
 }
