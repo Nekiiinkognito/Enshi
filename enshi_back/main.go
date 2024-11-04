@@ -45,5 +45,7 @@ func main() {
 		return
 	}
 
+	router.Run("localhost:9876")
+
 	fmt.Printf("Hey!, %v", "you")
 }
