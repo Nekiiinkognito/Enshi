@@ -18,7 +18,7 @@ WHERE user_id=$1
 RETURNING profile_id, user_id, bio, avatar_url, website_url
 `
 
-func (q *Queries) ClearProfileByUserId(ctx context.Context, userID pgtype.Int8) (Profile, error) {
+func (q *Queries) ClearProfileByUserId(ctx context.Context, userID int64) (Profile, error) {
 	row := q.db.QueryRow(ctx, clearProfileByUserId, userID)
 	var i Profile
 	err := row.Scan(
@@ -39,8 +39,8 @@ RETURNING profile_id, user_id, bio, avatar_url, website_url
 `
 
 type CreateProfileForUserParams struct {
-	ProfileID int64       `json:"profile_id"`
-	UserID    pgtype.Int8 `json:"user_id"`
+	ProfileID int64 `json:"profile_id"`
+	UserID    int64 `json:"user_id"`
 }
 
 func (q *Queries) CreateProfileForUser(ctx context.Context, arg CreateProfileForUserParams) (Profile, error) {
@@ -61,7 +61,7 @@ DELETE FROM public.profiles
 WHERE user_id=$1
 `
 
-func (q *Queries) DeleteProfileByUserId(ctx context.Context, userID pgtype.Int8) error {
+func (q *Queries) DeleteProfileByUserId(ctx context.Context, userID int64) error {
 	_, err := q.db.Exec(ctx, deleteProfileByUserId, userID)
 	return err
 }
@@ -70,7 +70,7 @@ const getProfileByUserId = `-- name: GetProfileByUserId :one
 SELECT profile_id, user_id, bio, avatar_url, website_url FROM public.profiles WHERE user_id = $1
 `
 
-func (q *Queries) GetProfileByUserId(ctx context.Context, userID pgtype.Int8) (Profile, error) {
+func (q *Queries) GetProfileByUserId(ctx context.Context, userID int64) (Profile, error) {
 	row := q.db.QueryRow(ctx, getProfileByUserId, userID)
 	var i Profile
 	err := row.Scan(

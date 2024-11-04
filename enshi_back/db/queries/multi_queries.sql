@@ -1,4 +1,4 @@
--- name: GetFavoriteBlogsInfosByUserId :many
+-- name: GetFavoriteBlogsByUserId :many
 SELECT sqlc.embed(blogs)
 FROM favorites
 JOIN blogs on blogs.blog_id = favorites.blog_id

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	db_repo "enshi/db/go_queries"
-	"enshi/utils"
+	utils "enshi/utils"
 	"fmt"
 
 	"github.com/gin-gonic/gin"

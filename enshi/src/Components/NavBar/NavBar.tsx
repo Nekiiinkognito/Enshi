@@ -1,6 +1,6 @@
 import { Button, Card, ChevronDownIcon, Text } from "@radix-ui/themes";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
     return (
@@ -18,7 +18,7 @@ export default function NavBar() {
                         <NavigationMenu.Trigger className="flex items-center">
                             <Button
                                 asChild
-                                className="w-fit h-fit rounded-full m-0 p-0 pr-2 pl-2 mt-2 mb-2 duration-[50ms]"
+                                className="w-fit pr-2 h-fit rounded-full m-0 p-0  pl-2 mt-2 mb-2 duration-[50ms]"
                                 variant="ghost"
                                 highContrast
                             >
