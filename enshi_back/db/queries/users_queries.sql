@@ -26,3 +26,6 @@ WHERE user_id=$1;
 -- name: DeleteUserByUsername :exec
 DELETE FROM public.users
 WHERE username=$1;
+
+-- name: GetUserByEmailOrNickname :one
+SELECT * FROM users WHERE username = $1 OR email = $2 LIMIT 1;

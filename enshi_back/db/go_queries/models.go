@@ -85,9 +85,9 @@ type Tag struct {
 
 type User struct {
 	UserID    int64            `json:"user_id"`
-	Username  string           `json:"username"`
-	Email     string           `json:"email"`
-	Password  string           `json:"password"`
+	Username  string           `json:"username" validate:"required"`
+	Email     string           `json:"email" validate:"required,email"`
+	Password  string           `json:"password" validate:"required"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	IsAdmin   bool             `json:"is_admin"`
 }

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	db_repo "enshi/db/go_queries"
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
@@ -11,6 +12,7 @@ import (
 // Pgx connection to database
 var Dbx *pgxpool.Pool
 var Dbx_connection *pgx.Conn
+var Sqlc_db = db_repo.New(Dbx)
 
 func SetupDatabase() error {
 
@@ -27,7 +29,7 @@ func SetupDatabase() error {
 	}
 
 	// Url to connect
-	url := fmt.Sprintf("postgres://%v:%v@nekiiinkognito.ru:5432/enshi_db", bd_user, bd_pass)
+	url := fmt.Sprintf("postgres://%v:%v@nekiiinkognito.ru:5432/postgres", bd_user, bd_pass)
 
 	// Connecting to database
 	Dbx, err = pgxpool.New(context.Background(), url)

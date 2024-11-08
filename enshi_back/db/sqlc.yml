@@ -10,6 +10,12 @@ sql:
         out: "./go_queries"
         sql_package: "pgx/v5"
         overrides:
+          - column: users.password
+            go_struct_tag: validate:"required"
+          - column: users.username
+            go_struct_tag: validate:"required"
+          - column: users.email
+            go_struct_tag: validate:"required,email"
           - db_type: "uuid"
             go_type:
               import: 'github.com/google/uuid'

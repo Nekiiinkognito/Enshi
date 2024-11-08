@@ -2,18 +2,97 @@ package utils
 
 import (
 	"context"
+	"encoding/binary"
+	rest_api_stuff "enshi/REST_API_stuff"
 	db_repo "enshi/db/go_queries"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 func testCookie(c *gin.Context) {
 	cock, _ := c.Cookie("auth_cookie")
 	c.IndentedJSON(http.StatusOK, gin.H{"token": "SLESAR' U STASA " + strings.Split(cock, "_")[0]})
+}
+
+func RegisterUser(c *gin.Context) {
+	var userParams db_repo.CreateUserParams
+
+	transaction, err := Dbx.Begin(context.Background())
+	defer transaction.Rollback(context.Background())
+
+	if err != nil {
+		rest_api_stuff.InternalErrorAnswer(c, err)
+		return
+	}
+
+	if err := c.BindJSON(&userParams); err != nil {
+		rest_api_stuff.BadRequestAnswer(c, err)
+		return
+	}
+
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	err = validate.Struct(userParams)
+	if err != nil {
+		rest_api_stuff.BadRequestAnswer(c, err)
+		return
+	}
+
+	query := db_repo.New(Dbx)
+	sameNicknameOrEmailUser, _ := query.GetUserByEmailOrNickname(
+		context.Background(),
+		db_repo.GetUserByEmailOrNicknameParams{
+			Username: userParams.Username,
+			Email:    userParams.Email,
+		},
+	)
+	if sameNicknameOrEmailUser.Username == userParams.Username {
+		rest_api_stuff.ConflictAnswer(
+			c,
+			fmt.Errorf("username"),
+		)
+		return
+	} else if sameNicknameOrEmailUser.Email == userParams.Email {
+		rest_api_stuff.ConflictAnswer(
+			c,
+			fmt.Errorf("email"),
+		)
+		return
+	}
+
+	sqlc_transaction := Sqlc_db.WithTx(transaction)
+
+	passwordHashSalt, err := Argon2Hasher.HashGen([]byte(userParams.Password), []byte{})
+	if err != nil {
+		rest_api_stuff.InternalErrorAnswer(c, err)
+		return
+	}
+
+	userParams.Password = passwordHashSalt.StringToStore
+
+	uuid, err := uuid.NewV7()
+	if err != nil {
+		rest_api_stuff.InternalErrorAnswer(c, err)
+		return
+	}
+
+	userParams.UserID = int64(
+		binary.BigEndian.Uint64(append(uuid[0:4], uuid[12:16]...)),
+	)
+
+	if _, err := sqlc_transaction.CreateUser(context.Background(), userParams); err != nil {
+		rest_api_stuff.InternalErrorAnswer(c, err)
+		return
+	}
+
+	transaction.Commit(context.Background())
+	rest_api_stuff.OkAnswer(c, "User has been created!")
 }
 
 func SetupRotes(g *gin.Engine) error {
@@ -25,6 +104,7 @@ func SetupRotes(g *gin.Engine) error {
 
 	freeGroup.POST("login", login)
 	freeGroup.GET("getCookie", testCookie)
+	freeGroup.POST("registerUser", RegisterUser)
 
 	authGroup := g.Group("/")
 	authGroup.Use(AuthMiddleware())

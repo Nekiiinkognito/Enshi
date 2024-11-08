@@ -18,9 +18,9 @@ RETURNING user_id, username, email, password, created_at, is_admin
 
 type CreateUserParams struct {
 	UserID   int64  `json:"user_id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -93,6 +93,29 @@ func (q *Queries) GetAllUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
+const getUserByEmailOrNickname = `-- name: GetUserByEmailOrNickname :one
+SELECT user_id, username, email, password, created_at, is_admin FROM users WHERE username = $1 OR email = $2 LIMIT 1
+`
+
+type GetUserByEmailOrNicknameParams struct {
+	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+}
+
+func (q *Queries) GetUserByEmailOrNickname(ctx context.Context, arg GetUserByEmailOrNicknameParams) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByEmailOrNickname, arg.Username, arg.Email)
+	var i User
+	err := row.Scan(
+		&i.UserID,
+		&i.Username,
+		&i.Email,
+		&i.Password,
+		&i.CreatedAt,
+		&i.IsAdmin,
+	)
+	return i, err
+}
+
 const getUserById = `-- name: GetUserById :one
 SELECT user_id, username, email, password, created_at, is_admin FROM users WHERE user_id = $1
 `
@@ -137,7 +160,7 @@ RETURNING user_id, username, email, password, created_at, is_admin
 `
 
 type UpdateUserPasswordHashParams struct {
-	Password string `json:"password"`
+	Password string `json:"password" validate:"required"`
 	UserID   int64  `json:"user_id"`
 }
 
