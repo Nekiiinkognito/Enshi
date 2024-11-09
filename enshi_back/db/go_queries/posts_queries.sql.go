@@ -21,7 +21,7 @@ RETURNING post_id, blog_id, user_id, title, content, created_at, updated_at
 type CreatePostParams struct {
 	PostID  int64       `json:"post_id"`
 	BlogID  pgtype.Int8 `json:"blog_id"`
-	UserID  pgtype.Int8 `json:"user_id"`
+	UserID  int64       `json:"user_id"`
 	Title   pgtype.Text `json:"title"`
 	Content pgtype.Text `json:"content"`
 }
@@ -91,13 +91,34 @@ func (q *Queries) GetPostsByBlogId(ctx context.Context, blogID pgtype.Int8) ([]P
 	return items, nil
 }
 
+const getPostsByPostId = `-- name: GetPostsByPostId :one
+SELECT post_id, blog_id, user_id, title, content, created_at, updated_at
+FROM public.posts posts
+where posts.post_id = $1
+`
+
+func (q *Queries) GetPostsByPostId(ctx context.Context, postID int64) (Post, error) {
+	row := q.db.QueryRow(ctx, getPostsByPostId, postID)
+	var i Post
+	err := row.Scan(
+		&i.PostID,
+		&i.BlogID,
+		&i.UserID,
+		&i.Title,
+		&i.Content,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getPostsByUserId = `-- name: GetPostsByUserId :many
 SELECT post_id, blog_id, user_id, title, content, created_at, updated_at
 FROM public.posts posts
 where posts.user_id = $1
 `
 
-func (q *Queries) GetPostsByUserId(ctx context.Context, userID pgtype.Int8) ([]Post, error) {
+func (q *Queries) GetPostsByUserId(ctx context.Context, userID int64) ([]Post, error) {
 	rows, err := q.db.Query(ctx, getPostsByUserId, userID)
 	if err != nil {
 		return nil, err
@@ -134,7 +155,7 @@ RETURNING post_id, blog_id, user_id, title, content, created_at, updated_at
 
 type UpdatePostByPostIdParams struct {
 	BlogID  pgtype.Int8 `json:"blog_id"`
-	UserID  pgtype.Int8 `json:"user_id"`
+	UserID  int64       `json:"user_id"`
 	Title   pgtype.Text `json:"title"`
 	Content pgtype.Text `json:"content"`
 	PostID  int64       `json:"post_id"`

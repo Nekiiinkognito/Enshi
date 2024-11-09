@@ -1,3 +1,8 @@
+-- name: GetPostsByPostId :one
+SELECT *
+FROM public.posts posts
+where posts.post_id = $1;
+
 -- name: GetPostsByUserId :many
 SELECT *
 FROM public.posts posts

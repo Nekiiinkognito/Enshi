@@ -8,7 +8,6 @@ import (
 	"enshi/global"
 	"enshi/hasher"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +15,7 @@ import (
 
 func Login(c *gin.Context) {
 	type content struct {
-		Nickname string
+		Username string
 		Password string
 	}
 
@@ -29,7 +28,7 @@ func Login(c *gin.Context) {
 	}
 
 	repo := db_repo.New(db_connection.Dbx)
-	user, err := repo.GetUserByUsername(context.Background(), body.Nickname)
+	user, err := repo.GetUserByUsername(context.Background(), body.Username)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -47,20 +46,20 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	user_info := map[string]interface{}{
-		"id":   user.UserID,
-		"name": user.Username,
+	userInfo := auth.UserInfoJWT{
+		Id:       user.UserID,
+		Username: user.Username,
+		IsAdmin:  user.IsAdmin,
 	}
 
-	token, err := auth.CreateToken(user_info)
+	token, err := auth.CreateToken(userInfo)
 	if err != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	cookieName := "auth_cookie"
-	cookieValue := "id=" + strconv.FormatInt(user_info["id"].(int64), 10) +
-		"_nickname=" + user_info["name"].(string)
+	cookieValue := token
 	maxAge := int(2 * time.Hour.Seconds()) // Cookie expiry time in seconds (1 hour)
 	path := global.PathForCookies          // Cookie path
 	domain := global.DomainForCookies      // Set domain (localhost for testing)

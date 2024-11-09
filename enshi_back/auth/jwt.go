@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,10 +13,16 @@ var (
 	SecretKey string
 )
 
+type UserInfoJWT struct {
+	Id       int64
+	Username string
+	IsAdmin  bool
+}
+
 // Generating new token with user info
 //
 // userInfo = { "id": int, "name": string }
-func CreateToken(userInfo map[string]interface{}) (string, error) {
+func CreateToken(userInfo UserInfoJWT) (string, error) {
 	// Create new token
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -23,8 +30,9 @@ func CreateToken(userInfo map[string]interface{}) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 
 	// Add some info to claims
-	claims["name"] = userInfo["name"]
-	claims["id"] = userInfo["id"]
+	claims["username"] = userInfo.Username
+	claims["id"] = strconv.FormatInt(userInfo.Id, 10)
+	claims["isAdmin"] = userInfo.IsAdmin
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix()
 
 	// Get string token that will be passed to user

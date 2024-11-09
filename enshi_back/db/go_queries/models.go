@@ -52,7 +52,7 @@ type Like struct {
 type Post struct {
 	PostID    int64            `json:"post_id"`
 	BlogID    pgtype.Int8      `json:"blog_id"`
-	UserID    pgtype.Int8      `json:"user_id"`
+	UserID    int64            `json:"user_id"`
 	Title     pgtype.Text      `json:"title"`
 	Content   pgtype.Text      `json:"content"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`

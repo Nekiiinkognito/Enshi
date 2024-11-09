@@ -94,9 +94,10 @@ func RegisterUser(c *gin.Context) {
 		return
 	}
 
-	tokenParams := map[string]interface{}{
-		"id":       userParams.UserID,
-		"username": userParams.Username,
+	tokenParams := auth.UserInfoJWT{
+		Id:       userParams.UserID,
+		Username: userParams.Username,
+		IsAdmin:  false,
 	}
 
 	token, err := auth.CreateToken(tokenParams)
@@ -108,7 +109,7 @@ func RegisterUser(c *gin.Context) {
 	cookieParams := &rest_api_stuff.CookieParams{
 		Name:     "auth_cookie",
 		Value:    token,
-		MaxAge:   int(time.Hour.Seconds() * 2),
+		MaxAge:   int(2 * time.Hour.Seconds()),
 		Path:     global.PathForCookies,
 		Domain:   global.DomainForCookies,
 		Secure:   global.SecureForCookies,

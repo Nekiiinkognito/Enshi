@@ -33,3 +33,10 @@ func ConflictAnswer(c *gin.Context, err error) {
 		gin.H{"error": err.Error()},
 	)
 }
+
+func UnauthorizedAnswer(c *gin.Context, err error) {
+	c.IndentedJSON(
+		http.StatusUnauthorized,
+		gin.H{"error": err.Error()},
+	)
+}

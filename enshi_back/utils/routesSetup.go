@@ -28,6 +28,11 @@ func SetupRotes(g *gin.Engine) error {
 	// Auth group routes
 	authGroup := g.Group("/")
 	authGroup.Use(middleware.AuthMiddleware())
+	authGroup.POST("createPost", routes.CreatePost)
+	authGroup.POST("deletePost", routes.DeletePost)
+
+	adminGroup := authGroup.Group("/admin/")
+	adminGroup.Use(middleware.AdminMiddleware())
 
 	authGroup.POST("changeUserProfile", routes.ChangeUserProfile)
 
