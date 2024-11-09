@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.radix-themes {
+	--default-font-family: 
+    --heading-font-family:
+		/* Your custom font for <Heading> components */ 
+        --code-font-family:
+		/* Your custom font for <Code> components */ 
+        --strong-font-family:
+		/* Your custom font for <Strong> components */ 
+        --em-font-family:
+		/* Your custom font for <Em> components */ 
+        --quote-font-family:
+		/* Your custom font for <Quote> components */;
+}
