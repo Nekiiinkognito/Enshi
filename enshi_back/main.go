@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	db_repo "enshi/db/go_queries"
+	"enshi/db_connection"
+	"enshi/env"
 	utils "enshi/utils"
 	"fmt"
 
@@ -11,17 +13,17 @@ import (
 
 func main() {
 
-	if err := utils.LoadEnv("utils/secret.env"); err != nil {
+	if err := env.LoadEnv("utils/secret.env"); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	if err := utils.SetupDatabase(); err != nil {
+	if err := db_connection.SetupDatabase(); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	defer utils.Dbx.Close()
-	defer utils.Dbx_connection.Close(context.Background())
+	defer db_connection.Dbx.Close()
+	defer db_connection.Dbx_connection.Close(context.Background())
 
 	router := gin.Default()
 	if err := utils.SetupRotes(router); err != nil {
@@ -30,7 +32,7 @@ func main() {
 	}
 
 	// Transaction
-	tx, _ := utils.Dbx.Begin(context.Background())
+	tx, _ := db_connection.Dbx.Begin(context.Background())
 	defer tx.Rollback(context.Background())
 
 	repo := db_repo.New(tx)

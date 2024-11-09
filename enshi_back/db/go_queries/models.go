@@ -71,7 +71,6 @@ type PostVote struct {
 }
 
 type Profile struct {
-	ProfileID  int64       `json:"profile_id"`
 	UserID     int64       `json:"user_id"`
 	Bio        pgtype.Text `json:"bio"`
 	AvatarUrl  pgtype.Text `json:"avatar_url"`

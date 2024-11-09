@@ -1,8 +1,9 @@
-package utils
+package db_connection
 
 import (
 	"context"
 	db_repo "enshi/db/go_queries"
+	"enshi/env"
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
@@ -12,18 +13,18 @@ import (
 // Pgx connection to database
 var Dbx *pgxpool.Pool
 var Dbx_connection *pgx.Conn
-var Sqlc_db = db_repo.New(Dbx)
+var Sqlc_query = db_repo.New(Dbx)
 
 func SetupDatabase() error {
 
 	var bd_pass, bd_user string
 	var err error
 
-	if err := LookupEnv(&bd_pass, "BD_PASSWORD"); err != nil {
+	if err := env.LookupEnv(&bd_pass, "BD_PASSWORD"); err != nil {
 		fmt.Printf("%v", err)
 		return err
 	}
-	if err := LookupEnv(&bd_user, "BD_USER"); err != nil {
+	if err := env.LookupEnv(&bd_user, "BD_USER"); err != nil {
 		fmt.Printf("%v", err)
 		return err
 	}

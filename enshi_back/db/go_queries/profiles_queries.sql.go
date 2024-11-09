@@ -15,14 +15,13 @@ const clearProfileByUserId = `-- name: ClearProfileByUserId :one
 UPDATE public.profiles
 SET bio='', avatar_url='', website_url=''
 WHERE user_id=$1
-RETURNING profile_id, user_id, bio, avatar_url, website_url
+RETURNING user_id, bio, avatar_url, website_url
 `
 
 func (q *Queries) ClearProfileByUserId(ctx context.Context, userID int64) (Profile, error) {
 	row := q.db.QueryRow(ctx, clearProfileByUserId, userID)
 	var i Profile
 	err := row.Scan(
-		&i.ProfileID,
 		&i.UserID,
 		&i.Bio,
 		&i.AvatarUrl,
@@ -33,21 +32,15 @@ func (q *Queries) ClearProfileByUserId(ctx context.Context, userID int64) (Profi
 
 const createProfileForUser = `-- name: CreateProfileForUser :one
 INSERT INTO public.profiles
-(profile_id, user_id, bio, avatar_url, website_url)
-VALUES($1, $2, '', '', '')
-RETURNING profile_id, user_id, bio, avatar_url, website_url
+(user_id, bio, avatar_url, website_url)
+VALUES($1, '', '', '')
+RETURNING user_id, bio, avatar_url, website_url
 `
 
-type CreateProfileForUserParams struct {
-	ProfileID int64 `json:"profile_id"`
-	UserID    int64 `json:"user_id"`
-}
-
-func (q *Queries) CreateProfileForUser(ctx context.Context, arg CreateProfileForUserParams) (Profile, error) {
-	row := q.db.QueryRow(ctx, createProfileForUser, arg.ProfileID, arg.UserID)
+func (q *Queries) CreateProfileForUser(ctx context.Context, userID int64) (Profile, error) {
+	row := q.db.QueryRow(ctx, createProfileForUser, userID)
 	var i Profile
 	err := row.Scan(
-		&i.ProfileID,
 		&i.UserID,
 		&i.Bio,
 		&i.AvatarUrl,
@@ -67,14 +60,13 @@ func (q *Queries) DeleteProfileByUserId(ctx context.Context, userID int64) error
 }
 
 const getProfileByUserId = `-- name: GetProfileByUserId :one
-SELECT profile_id, user_id, bio, avatar_url, website_url FROM public.profiles WHERE user_id = $1
+SELECT user_id, bio, avatar_url, website_url FROM public.profiles WHERE user_id = $1
 `
 
 func (q *Queries) GetProfileByUserId(ctx context.Context, userID int64) (Profile, error) {
 	row := q.db.QueryRow(ctx, getProfileByUserId, userID)
 	var i Profile
 	err := row.Scan(
-		&i.ProfileID,
 		&i.UserID,
 		&i.Bio,
 		&i.AvatarUrl,
@@ -86,12 +78,12 @@ func (q *Queries) GetProfileByUserId(ctx context.Context, userID int64) (Profile
 const updateProfileByUserId = `-- name: UpdateProfileByUserId :one
 UPDATE public.profiles
 SET bio=$2, avatar_url=$3, website_url=$4
-WHERE profile_id=$1
-RETURNING profile_id, user_id, bio, avatar_url, website_url
+WHERE user_id=$1
+RETURNING user_id, bio, avatar_url, website_url
 `
 
 type UpdateProfileByUserIdParams struct {
-	ProfileID  int64       `json:"profile_id"`
+	UserID     int64       `json:"user_id"`
 	Bio        pgtype.Text `json:"bio"`
 	AvatarUrl  pgtype.Text `json:"avatar_url"`
 	WebsiteUrl pgtype.Text `json:"website_url"`
@@ -99,14 +91,13 @@ type UpdateProfileByUserIdParams struct {
 
 func (q *Queries) UpdateProfileByUserId(ctx context.Context, arg UpdateProfileByUserIdParams) (Profile, error) {
 	row := q.db.QueryRow(ctx, updateProfileByUserId,
-		arg.ProfileID,
+		arg.UserID,
 		arg.Bio,
 		arg.AvatarUrl,
 		arg.WebsiteUrl,
 	)
 	var i Profile
 	err := row.Scan(
-		&i.ProfileID,
 		&i.UserID,
 		&i.Bio,
 		&i.AvatarUrl,

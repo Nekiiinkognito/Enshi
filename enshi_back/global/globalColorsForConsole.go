@@ -1,4 +1,4 @@
-package utils
+package global
 
 var ResetColor = "\033[0m"
 var RedColor = "\033[31m"

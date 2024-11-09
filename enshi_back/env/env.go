@@ -1,6 +1,7 @@
-package utils
+package env
 
 import (
+	"enshi/auth"
 	"fmt"
 	"os"
 
@@ -23,7 +24,7 @@ func LoadEnv(path string) error {
 		return err
 	}
 
-	if err := LookupEnv(&SecretKey, "SECRET_KEY"); err != nil {
+	if err := LookupEnv(&auth.SecretKey, "SECRET_KEY"); err != nil {
 		fmt.Printf("%v\n", err)
 		return err
 	}
