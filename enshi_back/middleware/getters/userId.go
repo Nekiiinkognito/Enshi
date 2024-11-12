@@ -1,7 +1,7 @@
 package getters
 
 import (
-	"enshi/middleware"
+	"enshi/global"
 	"fmt"
 	"strconv"
 
@@ -9,7 +9,7 @@ import (
 )
 
 func GetUserIdFromContext(c *gin.Context) (int64, error) {
-	userId, exists := c.Get(middleware.ContextUserId)
+	userId, exists := c.Get(global.ContextUserId)
 
 	if !exists {
 		return -1, fmt.Errorf("error getting user id")

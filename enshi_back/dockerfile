@@ -1,0 +1,15 @@
+FROM golang:1.23.3-alpine3.20
+
+WORKDIR /enshi_app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . .
+
+RUN go build -o enshi_bin .
+
+EXPOSE 9876
+
+CMD [ "./enshi_bin" ]

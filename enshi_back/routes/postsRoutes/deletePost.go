@@ -1,4 +1,4 @@
-package routes
+package postsRoutes
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 
 func DeletePost(c *gin.Context) {
 	var deletePostId struct {
-		postId int64
+		PostId int64
 	}
 
 	if err := c.BindJSON(&deletePostId); err != nil {
@@ -28,7 +28,7 @@ func DeletePost(c *gin.Context) {
 	}
 
 	query := db_repo.New(db_connection.Dbx)
-	post, err := query.GetPostsByPostId(context.Background(), deletePostId.postId)
+	post, err := query.GetPostsByPostId(context.Background(), deletePostId.PostId)
 	if err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
@@ -41,7 +41,7 @@ func DeletePost(c *gin.Context) {
 
 	// TODO: Add block of code, so admin could delete anything
 
-	err = query.DeletePostByPostId(context.Background(), deletePostId.postId)
+	err = query.DeletePostByPostId(context.Background(), deletePostId.PostId)
 	if err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return

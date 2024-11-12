@@ -5,6 +5,7 @@ import (
 	db_repo "enshi/db/go_queries"
 	"enshi/db_connection"
 	"enshi/env"
+	"enshi/global"
 	utils "enshi/utils"
 	"fmt"
 
@@ -47,7 +48,7 @@ func main() {
 		return
 	}
 
-	router.Run("localhost:9876")
+	router.Run(global.GinWorkPath)
 
 	fmt.Printf("Hey!, %v", "you")
 }

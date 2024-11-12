@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"enshi/auth"
+	"enshi/global"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,8 +29,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		// }
 
 		// Claims -> data stored in token
-		c.Set(ContextUserId, cookieClimes["id"])
-		c.Set(ContextTokenData, cookieClimes)
+		c.Set(global.ContextUserId, cookieClimes["id"])
+		c.Set(global.ContextTokenData, cookieClimes)
 		c.Next()
 
 	}
