@@ -1,0 +1,8 @@
+main
+*.log
+*.swp
+*.tmp
+*.out
+node_modules
+.idea
+.vscode
