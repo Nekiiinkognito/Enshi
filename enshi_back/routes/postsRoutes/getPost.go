@@ -12,7 +12,7 @@ import (
 
 func GetPost(c *gin.Context) {
 	var postParams struct {
-		PostId int64
+		PostId int64 `json:"post_id"`
 	}
 
 	if err := c.BindJSON(&postParams); err != nil {

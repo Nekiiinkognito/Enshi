@@ -148,14 +148,13 @@ func (q *Queries) GetPostsByUserId(ctx context.Context, userID int64) ([]Post, e
 
 const updatePostByPostId = `-- name: UpdatePostByPostId :one
 UPDATE public.posts
-SET blog_id=$1, user_id=$2, title=$3, "content"=$4, updated_at=CURRENT_TIMESTAMP
-WHERE post_id = $5
+SET blog_id=$1, title=$2, "content"=$3, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $4
 RETURNING post_id, blog_id, user_id, title, content, created_at, updated_at
 `
 
 type UpdatePostByPostIdParams struct {
 	BlogID  pgtype.Int8 `json:"blog_id"`
-	UserID  int64       `json:"user_id"`
 	Title   pgtype.Text `json:"title"`
 	Content pgtype.Text `json:"content"`
 	PostID  int64       `json:"post_id"`
@@ -164,7 +163,6 @@ type UpdatePostByPostIdParams struct {
 func (q *Queries) UpdatePostByPostId(ctx context.Context, arg UpdatePostByPostIdParams) (Post, error) {
 	row := q.db.QueryRow(ctx, updatePostByPostId,
 		arg.BlogID,
-		arg.UserID,
 		arg.Title,
 		arg.Content,
 		arg.PostID,

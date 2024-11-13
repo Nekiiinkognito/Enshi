@@ -13,7 +13,7 @@ import (
 
 func DeletePost(c *gin.Context) {
 	var deletePostId struct {
-		PostId int64
+		PostId int64 `json:"post_id"`
 	}
 
 	if err := c.BindJSON(&deletePostId); err != nil {
