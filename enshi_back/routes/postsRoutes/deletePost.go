@@ -7,16 +7,15 @@ import (
 	"enshi/db_connection"
 	"enshi/middleware/getters"
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func DeletePost(c *gin.Context) {
-	var deletePostId struct {
-		PostId int64 `json:"post_id"`
-	}
+	postId, err := strconv.ParseInt(c.Param("post-id"), 10, 64)
 
-	if err := c.BindJSON(&deletePostId); err != nil {
+	if err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return
 	}
@@ -28,7 +27,7 @@ func DeletePost(c *gin.Context) {
 	}
 
 	query := db_repo.New(db_connection.Dbx)
-	post, err := query.GetPostsByPostId(context.Background(), deletePostId.PostId)
+	post, err := query.GetPostsByPostId(context.Background(), postId)
 	if err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
@@ -41,7 +40,7 @@ func DeletePost(c *gin.Context) {
 
 	// TODO: Add block of code, so admin could delete anything
 
-	err = query.DeletePostByPostId(context.Background(), deletePostId.PostId)
+	err = query.DeletePostByPostId(context.Background(), postId)
 	if err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
