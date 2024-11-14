@@ -5,6 +5,7 @@ import (
 	"enshi/routes"
 	"enshi/routes/authRoutes"
 	"enshi/routes/postsRoutes"
+	"enshi/routes/userProfileRoutes"
 	"net/http"
 	"strings"
 
@@ -30,17 +31,20 @@ func SetupRotes(g *gin.Engine) error {
 
 	freeGroup.POST("login", authRoutes.Login)
 	freeGroup.POST("registerUser", authRoutes.RegisterUser)
+	freeGroup.GET("getPost", postsRoutes.GetPost)
 
 	// Auth group routes
 	authGroup := g.Group("/")
 	authGroup.Use(middleware.AuthMiddleware())
 
-	authGroup.GET("getPost", postsRoutes.GetPost)
-
+	authGroup.POST("updatePost", postsRoutes.UpdatePost)
 	authGroup.POST("createPost", postsRoutes.CreatePost)
-	authGroup.POST("deletePost", postsRoutes.DeletePost)
 	authGroup.POST("changeUserProfile", routes.ChangeUserProfile)
+	authGroup.POST("updateProfile", userProfileRoutes.UpdateUserProfile)
 
+	authGroup.DELETE("deletePost", postsRoutes.DeletePost)
+
+	// Admin group routes
 	adminGroup := authGroup.Group("/admin/")
 	adminGroup.Use(middleware.AdminMiddleware())
 

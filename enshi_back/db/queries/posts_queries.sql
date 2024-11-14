@@ -21,8 +21,8 @@ RETURNING *;
 
 -- name: UpdatePostByPostId :one
 UPDATE public.posts
-SET blog_id=$1, user_id=$2, title=$3, "content"=$4, updated_at=CURRENT_TIMESTAMP
-WHERE post_id = $5
+SET blog_id=$1, title=$2, "content"=$3, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $4
 RETURNING *;
 
 -- name: DeletePostByPostId :exec

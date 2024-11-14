@@ -1,10 +1,8 @@
 package middleware
 
 import (
-	"context"
 	rest_api_stuff "enshi/REST_API_stuff"
-	db_repo "enshi/db/go_queries"
-	"enshi/db_connection"
+	"enshi/middleware/checkRole"
 	"enshi/middleware/getters"
 	"fmt"
 
@@ -21,16 +19,14 @@ func AdminMiddleware() gin.HandlerFunc {
 			c.Abort()
 		}
 
-		user, err :=
-			db_repo.New(db_connection.Dbx).
-				GetUserById(context.Background(), userId)
+		isAdmin, err := checkRole.IsAdmin(userId)
 
-		if err != nil || user.UserID == 0 {
+		if err != nil {
 			rest_api_stuff.BadRequestAnswer(c, err)
 			c.Abort()
 		}
 
-		if !user.IsAdmin {
+		if !isAdmin {
 			rest_api_stuff.UnauthorizedAnswer(c, fmt.Errorf("not allowed"))
 			c.Abort()
 		}
