@@ -2,30 +2,26 @@ package postRules
 
 import (
 	globalrules "enshi/ABAC/globalRules"
-	"enshi/middleware/checkRole"
+	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"
 )
 
+const RULES_NUMBER_TO_COMPLETE = 2
+
 // Only owner or admin can delete post
-func DeleteRule(c *gin.Context) (bool, error) {
-	// Sender should be authorized
-	isAuthorized, err := globalrules.AuthorizedRule(c)
-	if err != nil {
-		return false, err
-	} else if !isAuthorized {
-		return false, nil
+func DeleteRule(c *gin.Context) (bool, []error) {
+	rulesToCheck := []rules.RuleFunction{
+		globalrules.AuthorizedRule,
+		globalrules.IsOwnerOfThePostRule,
+		globalrules.IsAdminRule,
 	}
 
-	isOwner, err := checkRole.IsOwnerOfThePost(c)
-	if err != nil {
-		return false, err
-	}
+	isAllowed, errors := rules.CheckRules(
+		c,
+		rulesToCheck,
+		RULES_NUMBER_TO_COMPLETE,
+	)
 
-	isAdmin, err := checkRole.IsAdmin(c)
-	if err != nil {
-		return false, err
-	}
-
-	return isAdmin || isOwner, err
+	return isAllowed, errors
 }

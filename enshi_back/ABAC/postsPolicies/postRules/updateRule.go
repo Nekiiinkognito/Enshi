@@ -2,25 +2,23 @@ package postRules
 
 import (
 	globalrules "enshi/ABAC/globalRules"
-	"enshi/middleware/checkRole"
+	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Only owner of the post can change it
-func PostUpdateRule(c *gin.Context) (bool, error) {
-	// Sender should be authorized
-	isAuthorized, err := globalrules.AuthorizedRule(c)
-	if err != nil {
-		return false, err
-	} else if !isAuthorized {
-		return false, nil
+func PostUpdateRule(c *gin.Context) (bool, []error) {
+	rulesToCheck := []rules.RuleFunction{
+		globalrules.AuthorizedRule,
+		globalrules.IsOwnerOfThePostRule,
 	}
 
-	isOwner, err := checkRole.IsOwnerOfThePost(c)
-	if err != nil {
-		return false, err
-	}
+	isAllowed, errors := rules.CheckRules(
+		c,
+		rulesToCheck,
+		rules.ALL_RULES_MUST_BE_COMPLETED,
+	)
 
-	return isOwner, nil
+	return isAllowed, errors
 }

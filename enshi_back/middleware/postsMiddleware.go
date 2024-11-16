@@ -4,6 +4,7 @@ import (
 	postspolicies "enshi/ABAC/postsPolicies"
 	rest_api_stuff "enshi/REST_API_stuff"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,10 +23,15 @@ func PostsMiddleware() gin.HandlerFunc {
 			c.Set("target", postspolicies.GET_POST)
 		}
 
-		isAllowed, err := postspolicies.PostsPolicies(c)
+		isAllowed, errors := postspolicies.PostsPolicies(c)
 
-		if err != nil {
-			rest_api_stuff.InternalErrorAnswer(c, err)
+		var errorsMap = map[int]string{}
+		for i, error := range errors {
+			errorsMap[i] = error.Error()
+		}
+
+		if errors != nil {
+			c.IndentedJSON(http.StatusUnauthorized, errorsMap)
 			c.Abort()
 			return
 		}

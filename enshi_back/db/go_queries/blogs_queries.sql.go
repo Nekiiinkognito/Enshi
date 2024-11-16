@@ -56,6 +56,26 @@ func (q *Queries) DeleteBlogByBlogId(ctx context.Context, blogID int64) error {
 	return err
 }
 
+const getBlogByBlogId = `-- name: GetBlogByBlogId :one
+SELECT blog_id, user_id, title, description, category_id, created_at
+FROM public.blogs
+WHERE blog_id = $1
+`
+
+func (q *Queries) GetBlogByBlogId(ctx context.Context, blogID int64) (Blog, error) {
+	row := q.db.QueryRow(ctx, getBlogByBlogId, blogID)
+	var i Blog
+	err := row.Scan(
+		&i.BlogID,
+		&i.UserID,
+		&i.Title,
+		&i.Description,
+		&i.CategoryID,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getBlogsByUserId = `-- name: GetBlogsByUserId :many
 SELECT blog_id, user_id, title, description, category_id, created_at
 FROM public.blogs

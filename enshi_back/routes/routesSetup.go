@@ -1,4 +1,4 @@
-package utils
+package routes
 
 import (
 	"enshi/middleware"
@@ -37,10 +37,6 @@ func SetupRotes(g *gin.Engine) error {
 		authRoutes.RegisterUser,
 	)
 
-	// Auth group routes
-	authGroup := g.Group("/")
-	authGroup.Use(middleware.AuthMiddleware())
-
 	postsGroup := g.Group("/")
 	postsGroup.Use(middleware.PostsMiddleware())
 
@@ -61,6 +57,9 @@ func SetupRotes(g *gin.Engine) error {
 		postsRoutes.DeletePost,
 	)
 
+	// Auth group routes
+	authGroup := g.Group("/")
+	authGroup.Use(middleware.AuthMiddleware())
 	authGroup.PUT(
 		"user-profiles",
 		userProfileRoutes.UpdateUserProfile,

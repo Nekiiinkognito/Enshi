@@ -5,6 +5,6 @@ import (
 )
 
 // Only owner of the post can change it
-func PostReadRule(c *gin.Context) (bool, error) {
+func PostReadRule(c *gin.Context) (bool, []error) {
 	return true, nil
 }
