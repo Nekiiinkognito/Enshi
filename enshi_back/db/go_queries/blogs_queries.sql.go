@@ -21,7 +21,7 @@ RETURNING blog_id, user_id, title, description, category_id, created_at
 type CreateBlogByUserIdParams struct {
 	BlogID      int64       `json:"blog_id"`
 	UserID      int64       `json:"user_id"`
-	Title       pgtype.Text `json:"title"`
+	Title       pgtype.Text `json:"title" validate:"required"`
 	Description pgtype.Text `json:"description"`
 	CategoryID  pgtype.Int4 `json:"category_id"`
 }
@@ -54,6 +54,26 @@ WHERE blog_id=$1
 func (q *Queries) DeleteBlogByBlogId(ctx context.Context, blogID int64) error {
 	_, err := q.db.Exec(ctx, deleteBlogByBlogId, blogID)
 	return err
+}
+
+const getBlogByBlogId = `-- name: GetBlogByBlogId :one
+SELECT blog_id, user_id, title, description, category_id, created_at
+FROM public.blogs
+WHERE blog_id = $1
+`
+
+func (q *Queries) GetBlogByBlogId(ctx context.Context, blogID int64) (Blog, error) {
+	row := q.db.QueryRow(ctx, getBlogByBlogId, blogID)
+	var i Blog
+	err := row.Scan(
+		&i.BlogID,
+		&i.UserID,
+		&i.Title,
+		&i.Description,
+		&i.CategoryID,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const getBlogsByUserId = `-- name: GetBlogsByUserId :many
@@ -97,7 +117,7 @@ RETURNING blog_id, user_id, title, description, category_id, created_at
 `
 
 type UpdateBlogInfoByBlogIdParams struct {
-	Title       pgtype.Text `json:"title"`
+	Title       pgtype.Text `json:"title" validate:"required"`
 	Description pgtype.Text `json:"description"`
 	CategoryID  pgtype.Int4 `json:"category_id"`
 	BlogID      int64       `json:"blog_id"`

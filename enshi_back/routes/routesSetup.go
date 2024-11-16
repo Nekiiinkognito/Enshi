@@ -1,9 +1,9 @@
-package utils
+package routes
 
 import (
 	"enshi/middleware"
-	"enshi/routes"
 	"enshi/routes/authRoutes"
+	"enshi/routes/blogRoutes"
 	"enshi/routes/postsRoutes"
 	"enshi/routes/userProfileRoutes"
 	"net/http"
@@ -29,20 +29,54 @@ func SetupRotes(g *gin.Engine) error {
 
 	freeGroup.GET("getCookie", testCookie)
 
-	freeGroup.POST("login", authRoutes.Login)
-	freeGroup.POST("registerUser", authRoutes.RegisterUser)
-	freeGroup.GET("getPost", postsRoutes.GetPost)
+	freeGroup.POST(
+		"login",
+		authRoutes.Login,
+	)
+	freeGroup.POST(
+		"users",
+		authRoutes.RegisterUser,
+	)
+
+	postsGroup := g.Group("/")
+	postsGroup.Use(middleware.PostsMiddleware())
+
+	postsGroup.GET(
+		"posts/:post-id",
+		postsRoutes.GetPost,
+	)
+	postsGroup.PUT(
+		"posts/:post-id",
+		postsRoutes.UpdatePost,
+	)
+	postsGroup.POST(
+		"posts",
+		postsRoutes.CreatePost,
+	)
+	postsGroup.DELETE(
+		"posts/:post-id",
+		postsRoutes.DeletePost,
+	)
+
+	blogGroup := g.Group("/")
+	blogGroup.Use(middleware.BlogsMiddleware())
+
+	blogGroup.POST(
+		"blogs",
+		blogRoutes.CreateBlog,
+	)
+
+	profilesGroup := g.Group("/")
+	profilesGroup.Use(middleware.ProfileMiddleware())
+
+	profilesGroup.PUT(
+		"profiles",
+		userProfileRoutes.UpdateUserProfile,
+	)
 
 	// Auth group routes
 	authGroup := g.Group("/")
 	authGroup.Use(middleware.AuthMiddleware())
-
-	authGroup.POST("updatePost", postsRoutes.UpdatePost)
-	authGroup.POST("createPost", postsRoutes.CreatePost)
-	authGroup.POST("changeUserProfile", routes.ChangeUserProfile)
-	authGroup.POST("updateProfile", userProfileRoutes.UpdateUserProfile)
-
-	authGroup.DELETE("deletePost", postsRoutes.DeletePost)
 
 	// Admin group routes
 	adminGroup := authGroup.Group("/admin/")

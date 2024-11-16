@@ -11,7 +11,7 @@ import (
 type Blog struct {
 	BlogID      int64            `json:"blog_id"`
 	UserID      int64            `json:"user_id"`
-	Title       pgtype.Text      `json:"title"`
+	Title       pgtype.Text      `json:"title" validate:"required"`
 	Description pgtype.Text      `json:"description"`
 	CategoryID  pgtype.Int4      `json:"category_id"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`

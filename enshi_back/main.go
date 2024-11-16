@@ -6,7 +6,7 @@ import (
 	"enshi/db_connection"
 	"enshi/env"
 	"enshi/global"
-	utils "enshi/utils"
+	"enshi/routes"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,7 @@ func main() {
 	defer db_connection.Dbx_connection.Close(context.Background())
 
 	router := gin.Default()
-	if err := utils.SetupRotes(router); err != nil {
+	if err := routes.SetupRotes(router); err != nil {
 		fmt.Println(err.Error())
 		return
 	}

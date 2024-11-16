@@ -5,9 +5,7 @@ import (
 	rest_api_stuff "enshi/REST_API_stuff"
 	db_repo "enshi/db/go_queries"
 	"enshi/db_connection"
-	"enshi/middleware/checkRole"
 	"enshi/middleware/getters"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,20 +18,14 @@ func UpdatePost(c *gin.Context) {
 		return
 	}
 
-	userId, err := getters.GetUserIdFromContext(c)
+	postId, err := getters.GetInt64Param(c, "post-id")
 
 	if err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
 	}
 
-	if isOwner, _ := checkRole.IsOwnerOfThePost(
-		userId,
-		UpdatedPostParams.PostID,
-	); !isOwner {
-		rest_api_stuff.UnauthorizedAnswer(c, fmt.Errorf("you are now allowed to change this"))
-		return
-	}
+	UpdatedPostParams.PostID = postId
 
 	_, err = db_repo.New(
 		db_connection.Dbx,
