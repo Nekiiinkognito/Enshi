@@ -36,24 +36,27 @@ func SetupRotes(g *gin.Engine) error {
 		"users",
 		authRoutes.RegisterUser,
 	)
-	freeGroup.GET(
-		"posts/:post-id",
-		postsRoutes.GetPost,
-	)
 
 	// Auth group routes
 	authGroup := g.Group("/")
 	authGroup.Use(middleware.AuthMiddleware())
 
-	authGroup.PUT(
+	postsGroup := g.Group("/")
+	postsGroup.Use(middleware.PostsMiddleware())
+
+	postsGroup.GET(
+		"posts/:post-id",
+		postsRoutes.GetPost,
+	)
+	postsGroup.PUT(
 		"posts/:post-id",
 		postsRoutes.UpdatePost,
 	)
-	authGroup.POST(
+	postsGroup.POST(
 		"posts",
 		postsRoutes.CreatePost,
 	)
-	authGroup.DELETE(
+	postsGroup.DELETE(
 		"posts/:post-id",
 		postsRoutes.DeletePost,
 	)

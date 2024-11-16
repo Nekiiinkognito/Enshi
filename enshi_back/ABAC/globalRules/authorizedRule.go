@@ -3,13 +3,19 @@ package globalrules
 import (
 	"enshi/auth"
 	"enshi/global"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func AuthorizedRule(c *gin.Context) (bool, error) {
-	tokenFromCookies := c.Request.CookiesNamed("auth_cookie")[0].Value
+	cookies := c.Request.CookiesNamed("auth_cookie")
+	if len(cookies) == 0 {
+		return false, fmt.Errorf("no cookies provided")
+	}
+
+	tokenFromCookies := cookies[0].Value
 	cookieClimes, err := auth.ValidateToken(tokenFromCookies)
 	if err != nil {
 		c.IndentedJSON(http.StatusUnauthorized, gin.H{"error auth": err.Error()})
