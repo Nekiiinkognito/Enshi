@@ -3,6 +3,7 @@ package routes
 import (
 	"enshi/middleware"
 	"enshi/routes/authRoutes"
+	"enshi/routes/blogRoutes"
 	"enshi/routes/postsRoutes"
 	"enshi/routes/userProfileRoutes"
 	"net/http"
@@ -57,13 +58,25 @@ func SetupRotes(g *gin.Engine) error {
 		postsRoutes.DeletePost,
 	)
 
+	blogGroup := g.Group("/")
+	blogGroup.Use(middleware.BlogsMiddleware())
+
+	blogGroup.POST(
+		"blogs",
+		blogRoutes.CreateBlog,
+	)
+
+	profilesGroup := g.Group("/")
+	profilesGroup.Use(middleware.ProfileMiddleware())
+
+	profilesGroup.PUT(
+		"profiles",
+		userProfileRoutes.UpdateUserProfile,
+	)
+
 	// Auth group routes
 	authGroup := g.Group("/")
 	authGroup.Use(middleware.AuthMiddleware())
-	authGroup.PUT(
-		"user-profiles",
-		userProfileRoutes.UpdateUserProfile,
-	)
 
 	// Admin group routes
 	adminGroup := authGroup.Group("/admin/")

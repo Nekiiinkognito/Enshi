@@ -1,23 +1,26 @@
 package postRules
 
 import (
-	globalrules "enshi/ABAC/globalRules"
+	globalrules "enshi/ABAC/GlobalRules"
 	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"
 )
 
-// Only owner of the post can change it
-func PostUpdateRule(c *gin.Context) (bool, []error) {
+const RULES_NUMBER_TO_COMPLETE = 2
+
+// Only owner or admin can delete post
+func DeleteRule(c *gin.Context) (bool, []error) {
 	rulesToCheck := []rules.RuleFunction{
 		globalrules.AuthorizedRule,
 		globalrules.IsOwnerOfThePostRule,
+		globalrules.IsAdminRule,
 	}
 
 	isAllowed, errors := rules.CheckRules(
 		c,
 		rulesToCheck,
-		rules.ALL_RULES_MUST_BE_COMPLETED,
+		RULES_NUMBER_TO_COMPLETE,
 	)
 
 	return isAllowed, errors

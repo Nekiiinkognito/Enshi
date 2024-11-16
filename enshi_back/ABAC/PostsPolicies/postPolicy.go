@@ -1,7 +1,7 @@
 package postspolicies
 
 import (
-	postRules "enshi/ABAC/postsPolicies/postRules"
+	"enshi/ABAC/PostsPolicies/postRules"
 	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"

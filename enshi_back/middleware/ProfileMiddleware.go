@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	postspolicies "enshi/ABAC/PostsPolicies"
+	profilepolicies "enshi/ABAC/ProfilePolicies"
 	rest_api_stuff "enshi/REST_API_stuff"
 	"fmt"
 	"net/http"
@@ -9,21 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostsMiddleware() gin.HandlerFunc {
+func ProfileMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		switch c.Request.Method {
-		case "DELETE":
-			c.Set("target", postspolicies.DELETE_POST)
 		case "PUT":
-			c.Set("target", postspolicies.UPDATE_POST)
-		case "POST":
-			c.Set("target", postspolicies.CREATE_POST)
-		case "GET":
-			c.Set("target", postspolicies.GET_POST)
+			c.Set("target", profilepolicies.UPDATE_PROFILE)
 		}
 
-		isAllowed, errors := postspolicies.PostsPolicies(c)
+		isAllowed, errors := profilepolicies.ProfilePolicies(c)
 
 		var errorsMap = map[int]string{}
 		for i, error := range errors {

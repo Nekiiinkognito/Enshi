@@ -1,4 +1,4 @@
-package blogrules
+package profilesrules
 
 import (
 	globalrules "enshi/ABAC/GlobalRules"
@@ -7,17 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func BlogDeleteRule(c *gin.Context) (bool, []error) {
+func UpdateProfileRule(c *gin.Context) (bool, []error) {
 	rulesToCheck := []rules.RuleFunction{
 		globalrules.AuthorizedRule,
-		globalrules.IsOwnerOfTheBlogRule,
-		globalrules.IsAdminRule,
 	}
 
 	isAllowed, errors := rules.CheckRules(
 		c,
 		rulesToCheck,
-		2,
+		rules.ALL_RULES_MUST_BE_COMPLETED,
 	)
 
 	return isAllowed, errors

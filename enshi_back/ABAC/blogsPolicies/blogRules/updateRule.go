@@ -1,7 +1,7 @@
 package blogrules
 
 import (
-	globalrules "enshi/ABAC/globalRules"
+	globalrules "enshi/ABAC/GlobalRules"
 	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"
