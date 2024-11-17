@@ -7,11 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Only owner of the post can change it
-func PostUpdateRule(c *gin.Context) (bool, []error) {
+// Only user that own target post and blog can do that
+func UpdatePostBlogRule(c *gin.Context) (bool, []error) {
 	rulesToCheck := []rules.RuleFunction{
 		globalrules.AuthorizedRule,
 		globalrules.IsOwnerOfThePostRule,
+		globalrules.IsOwnerOfTheBlogRule,
 	}
 
 	isAllowed, errors := rules.CheckRules(

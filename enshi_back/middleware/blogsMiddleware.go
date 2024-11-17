@@ -2,9 +2,7 @@ package middleware
 
 import (
 	blogspolicies "enshi/ABAC/blogsPolicies"
-	rest_api_stuff "enshi/REST_API_stuff"
-	"fmt"
-	"net/http"
+	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,19 +23,7 @@ func BlogsMiddleware() gin.HandlerFunc {
 
 		isAllowed, errors := blogspolicies.BlogPolicies(c)
 
-		var errorsMap = map[int]string{}
-		for i, error := range errors {
-			errorsMap[i] = error.Error()
-		}
-
-		if errors != nil {
-			c.IndentedJSON(http.StatusUnauthorized, errorsMap)
-			c.Abort()
-			return
-		}
-
-		if !isAllowed {
-			rest_api_stuff.UnauthorizedAnswer(c, fmt.Errorf("you have no permission"))
+		if rules.ShouldAbortRequest(c, isAllowed, errors) {
 			c.Abort()
 			return
 		}

@@ -12,7 +12,7 @@ import (
 )
 
 func CreateBlog(c *gin.Context) {
-	blogParams, err := utils.GetContextPayload[db_repo.CreateBlogByUserIdParams](c)
+	blogParams, err := getters.GetContextPayload[db_repo.CreateBlogByUserIdParams](c)
 	if err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return

@@ -6,14 +6,13 @@ import (
 	db_repo "enshi/db/go_queries"
 	"enshi/db_connection"
 	"enshi/middleware/getters"
-	"enshi/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func UpdateUserProfile(c *gin.Context) {
 	newProfile, err :=
-		utils.GetContextPayload[db_repo.UpdateProfileByUserIdParams](c)
+		getters.GetContextPayload[db_repo.UpdateProfileByUserIdParams](c)
 
 	if err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
