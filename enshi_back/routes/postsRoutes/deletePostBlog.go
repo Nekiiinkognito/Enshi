@@ -8,9 +8,11 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
-func DeletePost(c *gin.Context) {
+func DeletePostBlog(c *gin.Context) {
+	var queryParams db_repo.UpdatePostBlogIdParams
 	postId, err := strconv.ParseInt(c.Param("post-id"), 10, 64)
 
 	if err != nil {
@@ -18,9 +20,12 @@ func DeletePost(c *gin.Context) {
 		return
 	}
 
+	queryParams.BlogID = pgtype.Int8{}
+	queryParams.PostID = postId
+
 	query := db_repo.New(db_connection.Dbx)
 
-	err = query.DeletePostByPostId(context.Background(), postId)
+	err = query.UpdatePostBlogId(context.Background(), queryParams)
 	if err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return

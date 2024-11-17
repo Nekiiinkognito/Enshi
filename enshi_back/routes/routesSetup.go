@@ -61,6 +61,10 @@ func SetupRotes(g *gin.Engine) error {
 		"posts/:post-id",
 		postsRoutes.DeletePost,
 	)
+	postsGroup.DELETE(
+		"posts/:post-id/blogs",
+		postsRoutes.DeletePostBlog,
+	)
 
 	blogGroup := g.Group("/")
 	blogGroup.Use(middleware.BlogsMiddleware())

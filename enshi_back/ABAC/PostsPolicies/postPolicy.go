@@ -9,6 +9,7 @@ import (
 
 const (
 	DELETE_POST      = "delete_post"
+	DELETE_POST_BLOG = "delete_post_blog"
 	UPDATE_POST      = "update_post"
 	UPDATE_POST_BLOG = "update_post_blog"
 	CREATE_POST      = "create_post"
@@ -25,6 +26,9 @@ func PostsPolicies(c *gin.Context) (bool, []error) {
 	switch target {
 	case DELETE_POST:
 		return rules.CheckRule(c, postRules.DeleteRule)
+
+	case DELETE_POST_BLOG:
+		return rules.CheckRule(c, postRules.DeletePostFromBlogRule)
 
 	case UPDATE_POST:
 		return rules.CheckRule(c, postRules.PostUpdateRule)
