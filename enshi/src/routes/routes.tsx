@@ -17,10 +17,10 @@ export const routes = createRoutesFromElements(
             errorElement={<ErrorBoundary />}
             element={<MainPage />}
         >
-            <Route index element={<Text>Cringer path</Text>} />
+            <Route index element={<Text size={"5"}>Cringer path</Text>} />
             <Route
                 path="/a?/c"
-                element={<Text>Cringer path, but this a</Text>}
+                element={<Text weight={"regular"}>Cringer path, but this a</Text>}
             ></Route>
         </Route>
     </>
