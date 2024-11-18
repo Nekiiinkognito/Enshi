@@ -8,10 +8,12 @@ import (
 )
 
 const (
-	DELETE_POST = "delete_post"
-	UPDATE_POST = "update_post"
-	CREATE_POST = "create_post"
-	GET_POST    = "get_post"
+	DELETE_POST      = "delete_post"
+	DELETE_POST_BLOG = "delete_post_blog"
+	UPDATE_POST      = "update_post"
+	UPDATE_POST_BLOG = "update_post_blog"
+	CREATE_POST      = "create_post"
+	GET_POST         = "get_post"
 )
 
 func PostsPolicies(c *gin.Context) (bool, []error) {
@@ -25,8 +27,14 @@ func PostsPolicies(c *gin.Context) (bool, []error) {
 	case DELETE_POST:
 		return rules.CheckRule(c, postRules.DeleteRule)
 
+	case DELETE_POST_BLOG:
+		return rules.CheckRule(c, postRules.DeletePostFromBlogRule)
+
 	case UPDATE_POST:
 		return rules.CheckRule(c, postRules.PostUpdateRule)
+
+	case UPDATE_POST_BLOG:
+		return rules.CheckRule(c, postRules.UpdatePostBlogRule)
 
 	case GET_POST:
 		return rules.CheckRule(c, postRules.PostReadRule)

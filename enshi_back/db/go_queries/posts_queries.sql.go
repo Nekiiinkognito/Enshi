@@ -146,27 +146,38 @@ func (q *Queries) GetPostsByUserId(ctx context.Context, userID int64) ([]Post, e
 	return items, nil
 }
 
+const updatePostBlogId = `-- name: UpdatePostBlogId :exec
+UPDATE public.posts
+SET blog_id=$2, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $1
+RETURNING post_id, blog_id, user_id, title, content, created_at, updated_at
+`
+
+type UpdatePostBlogIdParams struct {
+	PostID int64       `json:"post_id"`
+	BlogID pgtype.Int8 `json:"blog_id"`
+}
+
+func (q *Queries) UpdatePostBlogId(ctx context.Context, arg UpdatePostBlogIdParams) error {
+	_, err := q.db.Exec(ctx, updatePostBlogId, arg.PostID, arg.BlogID)
+	return err
+}
+
 const updatePostByPostId = `-- name: UpdatePostByPostId :one
 UPDATE public.posts
-SET blog_id=$1, title=$2, "content"=$3, updated_at=CURRENT_TIMESTAMP
-WHERE post_id = $4
+SET title=$1, "content"=$2, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $3
 RETURNING post_id, blog_id, user_id, title, content, created_at, updated_at
 `
 
 type UpdatePostByPostIdParams struct {
-	BlogID  pgtype.Int8 `json:"blog_id"`
 	Title   pgtype.Text `json:"title"`
 	Content pgtype.Text `json:"content"`
 	PostID  int64       `json:"post_id"`
 }
 
 func (q *Queries) UpdatePostByPostId(ctx context.Context, arg UpdatePostByPostIdParams) (Post, error) {
-	row := q.db.QueryRow(ctx, updatePostByPostId,
-		arg.BlogID,
-		arg.Title,
-		arg.Content,
-		arg.PostID,
-	)
+	row := q.db.QueryRow(ctx, updatePostByPostId, arg.Title, arg.Content, arg.PostID)
 	var i Post
 	err := row.Scan(
 		&i.PostID,

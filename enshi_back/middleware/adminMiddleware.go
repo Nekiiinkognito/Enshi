@@ -1,26 +1,19 @@
 package middleware
 
 import (
-	rest_api_stuff "enshi/REST_API_stuff"
-	"enshi/middleware/checkRole"
-	"fmt"
+	adminpolicies "enshi/ABAC/AdminPolicies"
+	"enshi/ABAC/rules"
 
 	"github.com/gin-gonic/gin"
 )
 
 func AdminMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		isAllowed, errors := adminpolicies.AdminPolicies(c)
 
-		isAdmin, err := checkRole.IsAdmin(c)
-
-		if err != nil {
-			rest_api_stuff.BadRequestAnswer(c, err)
+		if rules.ShouldAbortRequest(c, isAllowed, errors) {
 			c.Abort()
-		}
-
-		if !isAdmin {
-			rest_api_stuff.UnauthorizedAnswer(c, fmt.Errorf("not allowed"))
-			c.Abort()
+			return
 		}
 
 		c.Next()

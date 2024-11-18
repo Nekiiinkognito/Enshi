@@ -49,6 +49,10 @@ func SetupRotes(g *gin.Engine) error {
 		"posts/:post-id",
 		postsRoutes.UpdatePost,
 	)
+	postsGroup.PUT(
+		"posts/:post-id/blogs/:blog-id",
+		postsRoutes.UpdatePostBlog,
+	)
 	postsGroup.POST(
 		"posts",
 		postsRoutes.CreatePost,
@@ -56,6 +60,10 @@ func SetupRotes(g *gin.Engine) error {
 	postsGroup.DELETE(
 		"posts/:post-id",
 		postsRoutes.DeletePost,
+	)
+	postsGroup.DELETE(
+		"posts/:post-id/blogs",
+		postsRoutes.DeletePostBlog,
 	)
 
 	blogGroup := g.Group("/")
@@ -66,6 +74,21 @@ func SetupRotes(g *gin.Engine) error {
 		blogRoutes.CreateBlog,
 	)
 
+	blogGroup.PUT(
+		"blogs/:blog-id",
+		blogRoutes.UpdateBlog,
+	)
+
+	blogGroup.DELETE(
+		"blogs/:blog-id",
+		blogRoutes.DeleteBlog,
+	)
+
+	blogGroup.GET(
+		"blogs/:blog-id",
+		blogRoutes.GetBlog,
+	)
+
 	profilesGroup := g.Group("/")
 	profilesGroup.Use(middleware.ProfileMiddleware())
 
@@ -74,12 +97,8 @@ func SetupRotes(g *gin.Engine) error {
 		userProfileRoutes.UpdateUserProfile,
 	)
 
-	// Auth group routes
-	authGroup := g.Group("/")
-	authGroup.Use(middleware.AuthMiddleware())
-
 	// Admin group routes
-	adminGroup := authGroup.Group("/admin/")
+	adminGroup := g.Group("/admin/")
 	adminGroup.Use(middleware.AdminMiddleware())
 
 	adminGroup.GET("testAdmin", testAdmin)

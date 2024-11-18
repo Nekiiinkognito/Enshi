@@ -21,10 +21,16 @@ RETURNING *;
 
 -- name: UpdatePostByPostId :one
 UPDATE public.posts
-SET blog_id=$1, title=$2, "content"=$3, updated_at=CURRENT_TIMESTAMP
-WHERE post_id = $4
+SET title=$1, "content"=$2, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $3
 RETURNING *;
 
 -- name: DeletePostByPostId :exec
 DELETE FROM public.posts
 WHERE post_id=$1;
+
+-- name: UpdatePostBlogId :exec
+UPDATE public.posts
+SET blog_id=$2, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $1
+RETURNING *;

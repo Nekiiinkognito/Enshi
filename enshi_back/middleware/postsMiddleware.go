@@ -2,21 +2,27 @@ package middleware
 
 import (
 	postspolicies "enshi/ABAC/PostsPolicies"
-	rest_api_stuff "enshi/REST_API_stuff"
-	"fmt"
-	"net/http"
+	"enshi/ABAC/rules"
+	"enshi/middleware/getters"
 
 	"github.com/gin-gonic/gin"
 )
 
 func PostsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		blogId, _ := getters.GetInt64Param(c, "blog-id")
+		postId, _ := getters.GetInt64Param(c, "post-id")
 
 		switch c.Request.Method {
 		case "DELETE":
 			c.Set("target", postspolicies.DELETE_POST)
 		case "PUT":
-			c.Set("target", postspolicies.UPDATE_POST)
+			if postId > 0 && blogId > 0 {
+				c.Set("target", postspolicies.UPDATE_POST_BLOG)
+			} else if postId > 0 {
+				c.Set("target", postspolicies.UPDATE_POST)
+			}
+
 		case "POST":
 			c.Set("target", postspolicies.CREATE_POST)
 		case "GET":
@@ -25,19 +31,7 @@ func PostsMiddleware() gin.HandlerFunc {
 
 		isAllowed, errors := postspolicies.PostsPolicies(c)
 
-		var errorsMap = map[int]string{}
-		for i, error := range errors {
-			errorsMap[i] = error.Error()
-		}
-
-		if errors != nil {
-			c.IndentedJSON(http.StatusUnauthorized, errorsMap)
-			c.Abort()
-			return
-		}
-
-		if !isAllowed {
-			rest_api_stuff.UnauthorizedAnswer(c, fmt.Errorf("you have no permission"))
+		if rules.ShouldAbortRequest(c, isAllowed, errors) {
 			c.Abort()
 			return
 		}

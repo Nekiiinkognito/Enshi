@@ -7,17 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Only owner of the post can change it
-func PostUpdateRule(c *gin.Context) (bool, []error) {
+func DeletePostFromBlogRule(c *gin.Context) (bool, []error) {
 	rulesToCheck := []rules.RuleFunction{
 		globalrules.AuthorizedRule,
 		globalrules.IsOwnerOfThePostRule,
+		globalrules.IsOwnerOfTheBlogRule,
 	}
 
 	isAllowed, errors := rules.CheckRules(
 		c,
 		rulesToCheck,
-		rules.ALL_RULES_MUST_BE_COMPLETED,
+		RULES_NUMBER_TO_COMPLETE,
 	)
 
 	return isAllowed, errors
