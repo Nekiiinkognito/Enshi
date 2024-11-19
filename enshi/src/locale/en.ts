@@ -1,5 +1,6 @@
 const en = {
-    hello: "hello!"
+    hello: "hello!",
+    search: "Search...",
 }
 
 export default en;
