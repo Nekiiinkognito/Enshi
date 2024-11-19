@@ -1,5 +1,6 @@
 const ru = {
-    hello: "Привет!"
+    hello: "Привет!",
+    search: "Поиск...",
 }
 
 export default ru;
