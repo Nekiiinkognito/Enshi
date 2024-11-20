@@ -1,6 +1,6 @@
 import { Text } from "@radix-ui/themes";
 import { createRoutesFromElements, Route, useRouteError } from "react-router-dom";
-import LoginRegisterPage from "../Pages/LoginRegisterPage/LoginRegisterPage";
+import { LoginPage, RegisterPage } from "../Pages/LoginRegisterPage/LoginRegisterPage";
 import MainPage from "../Pages/MainPage/MainPage";
 
 
@@ -28,9 +28,13 @@ export const routes = createRoutesFromElements(
         <Route
             path="/login"
             errorElement={<ErrorBoundary />}
-            element={<LoginRegisterPage />}
-        >
+            element={<LoginPage />}
+        />
 
-        </Route>
+        <Route
+            path="/register"
+            errorElement={<ErrorBoundary />}
+            element={<RegisterPage />}
+        />
     </>
 )

@@ -1,7 +1,7 @@
 package global
 
 const PathForCookies = "/"
-const DomainForCookies = "localhost"
+const DomainForCookies = "127.0.0.1"
 const SecureForCookies = false
 const HttpOnlyForCookies = false
 

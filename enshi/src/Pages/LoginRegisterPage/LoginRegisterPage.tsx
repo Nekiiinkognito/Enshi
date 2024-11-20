@@ -1,10 +1,16 @@
-import { useState } from "react";
 import LoginElement from "./LoginElement/LoginElement";
+import RegisterElement from "./RegisterElement/RegisterElement";
 
-export default function LoginRegisterPage() {
-    const [isRegister, setIsRegister] = useState(false)
+export function LoginPage() {
 
     return (
         <LoginElement  />
+    )
+}
+
+export function RegisterPage() {
+
+    return (
+        <RegisterElement  />
     )
 }
