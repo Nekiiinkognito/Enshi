@@ -68,6 +68,6 @@ func Login(c *gin.Context) {
 
 	c.Header("Authorization", token)
 	c.SetCookie(cookieName, cookieValue, maxAge, path, domain, secure, httpOnly)
-	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
+	c.IndentedJSON(http.StatusOK, gin.H{"token": token, "username": user.Username})
 
 }

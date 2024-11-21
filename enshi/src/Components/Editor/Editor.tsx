@@ -1,19 +1,18 @@
-import Quill, { Delta,  } from "quill/core";
-import ReactQuill from "react-quill";
-import React, {
+import Sources from "quill";
+import Quill, { Delta, } from "quill/core";
+import {
     forwardRef,
     useEffect,
-    useLayoutEffect,
     useRef,
-    useState,
+    useState
 } from "react";
-import Sources from "quill";
+import ReactQuill from "react-quill";
 
 type TEditor = {
     readOnly?: boolean;
     defaultValue?: string | Delta;
-    onChange: (d: string) => void; // TODO: make type
-    onSelectionChange?: any; // TODO same as before
+    onChange: (d: string) => void;
+    onSelectionChange?: any;
 };
 
 const modules = {

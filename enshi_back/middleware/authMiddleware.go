@@ -11,8 +11,6 @@ import (
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		// token := c.GetHeader("Authorization")
-
 		tokenFromCookies := c.Request.CookiesNamed("auth_cookie")[0].Value
 		cookieClimes, err := auth.ValidateToken(tokenFromCookies)
 		if err != nil {
@@ -21,14 +19,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// claims, err := auth.ValidateToken(token)
-		// if err != nil {
-		// 	c.IndentedJSON(http.StatusUnauthorized, gin.H{"error auth": err.Error()})
-		// 	c.Abort()
-		// 	return
-		// }
-
-		// Claims -> data stored in token
 		c.Set(global.ContextUserId, cookieClimes["id"])
 		c.Set(global.ContextTokenData, cookieClimes)
 		c.Next()

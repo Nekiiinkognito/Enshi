@@ -7,6 +7,14 @@ const en = {
     confirmPassword: "Confirm password",
     submit: "Submit",
 
+    createPost: "Write post",
+
+    profile: "Profile",
+    yourBlogs: "Your blogs",
+
+    signIn: "Log in",
+    signOut: "Sign out",
+
     capsLogWarning: "CapsLock is on",
 
     registerForm: "Register",
@@ -20,6 +28,7 @@ const en = {
         passwordsMismatch: "Passwords must be the same",
         invalidLoginData: "Invalid username or password",
         invalidRegisterData: "Invalid register data",
+        unauthorized: "You need to be authorized to do that",
     },
 };
 

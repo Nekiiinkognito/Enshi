@@ -7,10 +7,19 @@ const ru = {
     confirmPassword: "Подтвердите пароль",
     submit: "Подтвердить",
 
+    createPost: "Написать пост",
+
+    profile: "Профиль",
+    yourBlogs: "Ваши блоги",
+
+    signIn: "Войти",
+    signOut: "Выйти",
+
     capsLogWarning: "Включён CapsLock",
 
     registerForm: "Регистрация",
     loginForm: "Вход",
+    
 
     errors: {
         enterUsername: "Пожалуйста, введите ваше имя пользователя",
@@ -21,6 +30,7 @@ const ru = {
         invalidLoginData: "Неверное имя пользователя или пароль",
         invalidRegisterData:
             "Пользователь с таким адресом электронной почты или именем пользователя уже существует",
+        unauthorized: "Вы должны быть авторизованы, чтобы сделать это",
     },
 };
 

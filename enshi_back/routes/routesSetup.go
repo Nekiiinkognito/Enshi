@@ -2,6 +2,7 @@ package routes
 
 import (
 	"enshi/middleware"
+	"enshi/middleware/getters"
 	"enshi/routes/authRoutes"
 	"enshi/routes/blogRoutes"
 	"enshi/routes/postsRoutes"
@@ -19,6 +20,22 @@ func testCookie(c *gin.Context) {
 
 func testAdmin(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "you are an admin, congrats!"})
+}
+
+func testAuth(c *gin.Context) {
+	userInfo, err := getters.GetClaimsFromContext(c)
+	if err != nil {
+		c.IndentedJSON(http.StatusUnauthorized, gin.H{"message": "you are not logged in"})
+
+	}
+	c.IndentedJSON(
+		http.StatusOK,
+		gin.H{
+			"message":  "you are logged in, congrats!",
+			"username": userInfo.Username,
+			"is_admin": userInfo.IsAdmin,
+		},
+	)
 }
 
 func SetupRotes(g *gin.Engine) error {
@@ -101,7 +118,11 @@ func SetupRotes(g *gin.Engine) error {
 	adminGroup := g.Group("/admin/")
 	adminGroup.Use(middleware.AdminMiddleware())
 
-	adminGroup.GET("testAdmin", testAdmin)
+	adminGroup.GET("check", testAdmin)
+
+	authGroup := g.Group("/auth/")
+	authGroup.Use(middleware.AuthMiddleware())
+	authGroup.GET("check", testAuth)
 
 	return nil
 }

@@ -7,14 +7,16 @@ import {
 import { DropdownMenu, Flex, IconButton, Text } from "@radix-ui/themes";
 import { Icon } from "@radix-ui/themes/dist/esm/components/callout.js";
 import { useAtomValue } from "jotai";
-import { userAtom } from "../../../AtomStore/AtomStore";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { userAtom } from "../../../../AtomStore/AtomStore";
 
 export default function UserButton() {
     const user = useAtomValue(userAtom);
+    const {t} = useTranslation()
 
     return (
-        <div className="flex justify-end flex-1">
+        <div className="">
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
                     <IconButton>
@@ -30,7 +32,7 @@ export default function UserButton() {
                                     <PersonIcon />
                                 </Icon>
 
-                                <Text>Profile</Text>
+                                <Text>{t("profile")}</Text>
                             </Flex>
                         </Link>
                     </DropdownMenu.Item>
@@ -40,7 +42,7 @@ export default function UserButton() {
                             <Icon>
                                 <LaptopIcon />
                             </Icon>
-                            <Text>Your blogs</Text>
+                            <Text>{t("yourBlogs")}</Text>
                         </Flex>
                     </DropdownMenu.Item>
 
@@ -52,14 +54,14 @@ export default function UserButton() {
                                 <Icon>
                                     <ExitIcon />
                                 </Icon>
-                                <Text>Log out</Text>
+                                <Text>{t("signOut")}</Text>
                             </Flex>
                         ) : (
                             <Flex className="justify-between gap-2">
                                 <Icon>
                                     <EnterIcon />
                                 </Icon>
-                                <Text>Log in</Text>
+                                <Text>{t("signIn")}</Text>
                             </Flex>
                         )}
                     </DropdownMenu.Item>

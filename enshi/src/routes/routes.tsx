@@ -1,8 +1,13 @@
 import { Text } from "@radix-ui/themes";
-import { createRoutesFromElements, Route, useRouteError } from "react-router-dom";
-import { LoginPage, RegisterPage } from "../Pages/LoginRegisterPage/LoginRegisterPage";
+import {
+    createRoutesFromElements,
+    Route,
+    useRouteError,
+} from "react-router-dom";
+import LoginPage from "../Pages/LoginRegisterPage/LoginPage/LoginPage";
+import RegisterPage from "../Pages/LoginRegisterPage/RegisterPage/RegisterPage";
 import MainPage from "../Pages/MainPage/MainPage";
-
+import PostCreatorPage from "../Pages/PostCreatorPage/PostCreatorPage";
 
 function ErrorBoundary() {
     let error = useRouteError();
@@ -13,15 +18,20 @@ function ErrorBoundary() {
 
 export const routes = createRoutesFromElements(
     <>
-        <Route
-            path="/"
-            errorElement={<ErrorBoundary />}
-            element={<MainPage />}
-        >
+        <Route path="/" errorElement={<ErrorBoundary />} element={<MainPage />}>
             <Route index element={<Text size={"5"}>Cringer path</Text>} />
             <Route
                 path="/a?/c"
-                element={<Text weight={"regular"}>Cringer path, but this a</Text>}
+                element={
+                    <Text weight={"regular"}>Cringer path, but this a</Text>
+                }
+            ></Route>
+
+            <Route
+                path="/create"
+                element={
+                    <PostCreatorPage />
+                }
             ></Route>
         </Route>
 
@@ -37,4 +47,4 @@ export const routes = createRoutesFromElements(
             element={<RegisterPage />}
         />
     </>
-)
+);

@@ -2,33 +2,35 @@ import * as Form from "@radix-ui/react-form";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { Button, Card, Heading, Text, TextField } from "@radix-ui/themes";
 import { useMutation } from "@tanstack/react-query";
+import { t } from "i18next";
+import { useAtom } from "jotai";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { axiosLocalhost } from "../../../api/axios/axios";
+import { userAtom } from "../../../AtomStore/AtomStore";
 import UseCapsLock from "../../../hooks/useCapsLock";
 import ShowPasswordButton from "../ShowPasswordButton/ShowPasswordButton";
 
-type TRegisterData = {
+type TLoginData = {
     username: string;
     password: string;
-    email: string;
 };
 
-export default function RegisterElement() {
+export default function LoginPage() {
+    const [userAtomValue, setUserAtom] = useAtom(userAtom)
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfPassword, setShowConfPassword] = useState(false);
     const { isCapsLockOn } = UseCapsLock();
-
-    const { t } = useTranslation();
-
     const [isError, setIsError] = useState(false);
 
     const navigate = useNavigate();
 
-    const registerMutation = useMutation({
-        mutationFn: async (data: TRegisterData) => {
-            await axiosLocalhost.post("/users", JSON.stringify(data));
+    const logInMutation = useMutation({
+        mutationFn: async (data: TLoginData) => {
+            let response = await axiosLocalhost.post("/login", JSON.stringify(data));
+            setUserAtom({
+                username: response.data.username,
+                isAdmin: false
+            })
         },
 
         onError: (error, _variables, _context) => {
@@ -37,6 +39,18 @@ export default function RegisterElement() {
         },
 
         onSuccess: () => {
+            let isAdminFunc = async () => {
+                let response = await axiosLocalhost.get("/admin/check");
+                if (response.status === 200) {
+                    setUserAtom({
+                        username: userAtomValue?.username || "",
+                        isAdmin: true
+                    })
+                }
+            };
+
+            isAdminFunc();
+
             navigate("/");
         },
     });
@@ -44,12 +58,12 @@ export default function RegisterElement() {
     return (
         <Card
             size={"2"}
-            className="absolute w-[25rem] min-w-[20rem]
+            className="absolute w-1/5 
                         left-[50%] top-[50%] 
                         translate-x-[-50%] translate-y-[-50%]"
         >
             <Heading weight={"medium"} className="mb-4 text-center">
-                {t("registerForm")}
+                {t("loginForm")}
             </Heading>
             <Form.Root
                 onSubmit={(e) => {
@@ -58,13 +72,12 @@ export default function RegisterElement() {
                         document.querySelector("form") as HTMLFormElement
                     );
 
-                    let registerData: TRegisterData = {
+                    let loginData: TLoginData = {
                         password: (formData.get("password") as string) || "",
                         username: (formData.get("username") as string) || "",
-                        email: (formData.get("email") as string) || "",
                     };
 
-                    registerMutation.mutate(registerData);
+                    logInMutation.mutate(loginData);
                 }}
             >
                 <Form.Field className="mb-2.5 gap-0.5 grid" name="username">
@@ -78,41 +91,6 @@ export default function RegisterElement() {
                     </div>
                     <Form.Control asChild>
                         <TextField.Root type="text" required>
-                            <Form.ValidityState>
-                                {(validity) => (
-                                    <TextField.Slot
-                                        side="right"
-                                        color="red"
-                                        className={
-                                            validity
-                                                ? validity.valid
-                                                    ? "hidden"
-                                                    : "mr-0.5"
-                                                : "hidden"
-                                        }
-                                    >
-                                        <CrossCircledIcon />
-                                    </TextField.Slot>
-                                )}
-                            </Form.ValidityState>
-                        </TextField.Root>
-                    </Form.Control>
-                </Form.Field>
-
-                <Form.Field className="mb-2.5 gap-0.5 grid" name="email">
-                    <div className="flex items-baseline justify-between gap-2">
-                        <Form.Label>
-                            <Text size={"4"}>{t("email")}</Text>
-                        </Form.Label>
-                        <Form.Message match="valueMissing">
-                            <Text color="red">{t("errors.enterEmail")}</Text>
-                        </Form.Message>
-                        <Form.Message match="typeMismatch">
-                            <Text color="red">{t("errors.invalidEmail")}</Text>
-                        </Form.Message>
-                    </div>
-                    <Form.Control asChild>
-                        <TextField.Root type="email" required>
                             <Form.ValidityState>
                                 {(validity) => (
                                     <TextField.Slot
@@ -174,60 +152,8 @@ export default function RegisterElement() {
                     </Text>
                 </Form.Field>
 
-                <Form.Field
-                    className="mb-2.5 gap-0.5 grid"
-                    name="conf-password"
-                >
-                    <div className="flex items-baseline justify-between">
-                        <Form.Label>
-                            <Text size={"4"}>{t("confirmPassword")}</Text>
-                        </Form.Label>
-                        <Form.Message match="valueMissing">
-                            <Text color="red">{t("errors.enterPassword")}</Text>
-                        </Form.Message>
-                        <Form.Message
-                            match={(value, formData) =>
-                                value !== formData.get("password")
-                            }
-                        >
-                            <Text color="red">
-                                {t("errors.passwordsMismatch")}
-                            </Text>
-                        </Form.Message>
-                    </div>
-                    <Form.Control asChild>
-                        <TextField.Root
-                            type={showConfPassword ? "text" : "password"}
-                            required
-                        >
-                            <Form.ValidityState>
-                                {(validity) => (
-                                    <TextField.Slot
-                                        side="right"
-                                        color={
-                                            validity
-                                                ? validity.valid
-                                                    ? undefined
-                                                    : "red"
-                                                : undefined
-                                        }
-                                    >
-                                        <ShowPasswordButton
-                                            isShown={showConfPassword}
-                                            setIsShown={setShowConfPassword}
-                                        />
-                                    </TextField.Slot>
-                                )}
-                            </Form.ValidityState>
-                        </TextField.Root>
-                    </Form.Control>
-                    <Text size={"1"} hidden={!isCapsLockOn}>
-                        {t("capsLogWarning")}
-                    </Text>
-                </Form.Field>
-
                 <Text color="red" hidden={!isError}>
-                    {t("errors.invalidRegisterData")}
+                    {t("errors.invalidLoginData")}
                 </Text>
 
                 <Form.Submit className="flex justify-center" asChild>
