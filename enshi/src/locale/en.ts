@@ -20,6 +20,10 @@ const en = {
     registerForm: "Register",
     loginForm: "Log in",
 
+    suggestRegister: "Don't have an account?",
+    register: "Register",
+    now: "now!",
+
     errors: {
         enterUsername: "Please enter your username",
         enterEmail: "Please enter your email",

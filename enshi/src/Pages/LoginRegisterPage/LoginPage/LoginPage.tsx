@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { t } from "i18next";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosLocalhost } from "../../../api/axios/axios";
 import { userAtom } from "../../../AtomStore/AtomStore";
 import UseCapsLock from "../../../hooks/useCapsLock";
@@ -17,7 +17,7 @@ type TLoginData = {
 };
 
 export default function LoginPage() {
-    const [userAtomValue, setUserAtom] = useAtom(userAtom)
+    const [userAtomValue, setUserAtom] = useAtom(userAtom);
     const [showPassword, setShowPassword] = useState(false);
     const { isCapsLockOn } = UseCapsLock();
     const [isError, setIsError] = useState(false);
@@ -26,11 +26,14 @@ export default function LoginPage() {
 
     const logInMutation = useMutation({
         mutationFn: async (data: TLoginData) => {
-            let response = await axiosLocalhost.post("/login", JSON.stringify(data));
+            let response = await axiosLocalhost.post(
+                "/login",
+                JSON.stringify(data)
+            );
             setUserAtom({
                 username: response.data.username,
-                isAdmin: false
-            })
+                isAdmin: false,
+            });
         },
 
         onError: (error, _variables, _context) => {
@@ -44,8 +47,8 @@ export default function LoginPage() {
                 if (response.status === 200) {
                     setUserAtom({
                         username: userAtomValue?.username || "",
-                        isAdmin: true
-                    })
+                        isAdmin: true,
+                    });
                 }
             };
 
@@ -58,7 +61,7 @@ export default function LoginPage() {
     return (
         <Card
             size={"2"}
-            className="absolute w-1/5 
+            className="absolute w-1/4 
                         left-[50%] top-[50%] 
                         translate-x-[-50%] translate-y-[-50%]"
         >
@@ -66,6 +69,7 @@ export default function LoginPage() {
                 {t("loginForm")}
             </Heading>
             <Form.Root
+                className="flex flex-col gap-2"
                 onSubmit={(e) => {
                     e.preventDefault();
                     let formData = new FormData(
@@ -80,10 +84,10 @@ export default function LoginPage() {
                     logInMutation.mutate(loginData);
                 }}
             >
-                <Form.Field className="mb-2.5 gap-0.5 grid" name="username">
+                <Form.Field className="gap-0.5 grid" name="username">
                     <div className="flex items-baseline justify-between gap-2">
                         <Form.Label>
-                            <Text size={"4"}>{t("username")}</Text>
+                            <Text size={"3"}>{t("username")}</Text>
                         </Form.Label>
                         <Form.Message match="valueMissing">
                             <Text color="red">{t("errors.enterUsername")}</Text>
@@ -115,7 +119,7 @@ export default function LoginPage() {
                 <Form.Field className="mb-2.5 gap-0.5 grid" name="password">
                     <div className="flex items-baseline justify-between gap-2">
                         <Form.Label>
-                            <Text size={"4"}>{t("password")}</Text>
+                            <Text size={"3"}>{t("password")}</Text>
                         </Form.Label>
                         <Form.Message match="valueMissing">
                             <Text color="red">{t("errors.enterPassword")}</Text>
@@ -125,6 +129,7 @@ export default function LoginPage() {
                         <TextField.Root
                             type={showPassword ? "text" : "password"}
                             required
+                            autoComplete="on"
                         >
                             <Form.ValidityState>
                                 {(validity) => (
@@ -157,10 +162,18 @@ export default function LoginPage() {
                 </Text>
 
                 <Form.Submit className="flex justify-center" asChild>
-                    <Button type="submit" className="w-1/3 m-auto">
+                    <Button type="submit" className="w-full p-4 m-auto">
                         <Text size={"3"}>{t("submit")}</Text>
                     </Button>
                 </Form.Submit>
+                
+                <Text size={"1"} color="gray" className="block w-full text-center">
+                    {t("suggestRegister")}{" "}
+                    <Link to="/register">
+                        <Text className="underline" weight={"bold"}>{t("register")}</Text>
+                    </Link>{" "}
+                    {t("now")}
+                </Text>
             </Form.Root>
         </Card>
     );

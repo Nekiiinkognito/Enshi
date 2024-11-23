@@ -7,7 +7,7 @@ import { userAtom } from "../../AtomStore/AtomStore";
 import NavBar from "../../Components/NavBar/NavBar";
 
 const REFETCH_INTERVAL_IN_MINUTES = 5;
-const RETRY_INTERVAL_IN_SECONDS = 3;
+const RETRY_INTERVAL_IN_SECONDS = 1;
 
 const SECONDS_IN_MINUTE = 60;
 const MILLS_IN_SECOND = 1000;
@@ -18,14 +18,15 @@ export default function MainPage() {
     const { isPending } = useQuery({
         queryKey: ["authKey"],
         queryFn: async () => {
-            const response = await axiosLocalhost.get("/auth/check");
-            if (response.status === 200) {
+            try {
+                const response = await axiosLocalhost.get("/auth/check");
+                
                 setUserData({
                     isAdmin: response.data["is_admin"],
                     username: response.data["username"],
                 });
                 return true;
-            } else {
+            } catch (error) {
                 setUserData(undefined);
                 return false;
             }
@@ -34,6 +35,7 @@ export default function MainPage() {
             REFETCH_INTERVAL_IN_MINUTES * SECONDS_IN_MINUTE * MILLS_IN_SECOND,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
+        gcTime: 10,
 
         retry: 3,
         retryDelay: (attempt) =>

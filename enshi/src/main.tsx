@@ -4,7 +4,7 @@ import './index.css'
 import './locale/i18n.ts'
 import i18n from './locale/i18n.ts'
 
-i18n.changeLanguage(navigator.language)
+i18n.changeLanguage("ru")
 
 createRoot(document.getElementById('root')!).render(
     <App />

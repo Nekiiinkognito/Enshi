@@ -1,5 +1,5 @@
 import Sources from "quill";
-import Quill, { Delta, } from "quill/core";
+import Quill, { Delta } from "quill/core";
 import {
     forwardRef,
     useEffect,
@@ -18,7 +18,7 @@ type TEditor = {
 const modules = {
     toolbar: [
         [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
+        ["bold", "italic", "underline", "strike", "blockquote", "span-wrapper"],
         [
             { list: "ordered" },
             { list: "bullet" },
@@ -29,6 +29,9 @@ const modules = {
         ["clean"],
         [{ align: [] }],
     ],
+    clipboard: {
+        matchVisual: true,
+      },
 };
 
 /**
@@ -50,6 +53,26 @@ const Editor = forwardRef((props: TEditor) => {
         };
     }, [editor.current]);
 
+    useEffect(() => {
+        let Inline = Quill.import('attributors/style/size');
+        console.log(Inline);
+        
+        // //@ts-ignore
+        // class BoldBlot extends Inline {}
+        // //@ts-ignore
+        // BoldBlot.blotName = 'bold1';
+        // //@ts-ignore
+        // BoldBlot.tagName = 'strong';
+        // console.log(BoldBlot, true);
+        
+
+        Quill.register(Inline as any, true);
+      return () => {
+    
+      }
+    }, [])
+    
+
     const changeHandler = (val: string, _changeDelta: Delta, _source: Sources, _editor: ReactQuill.UnprivilegedEditor) => {
         console.log(val);
         console.log(JSON.stringify(quill?.getContents().ops, null, 2))
@@ -64,6 +87,7 @@ const Editor = forwardRef((props: TEditor) => {
                 value={value}
                 ref={editor}
                 modules={modules}
+                formats={['bold1']}
 
 
                 onChange={changeHandler}

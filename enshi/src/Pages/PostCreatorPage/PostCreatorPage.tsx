@@ -1,35 +1,25 @@
-import { Container, Text } from "@radix-ui/themes";
-import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { Container } from "@radix-ui/themes";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { userAtom } from "../../AtomStore/AtomStore";
+import ArticleViewer from "../../Components/ArticleViewer/ArticleViewer";
 import Editor from "../../Components/Editor/Editor";
 
 export default function PostCreatorPage() {
-    const user = useAtomValue(userAtom);
-
     const [userInput, setUserInput] = useState("");
 
     const { t } = useTranslation();
 
-    useEffect(() => {
-        console.log("asdasd", userInput);
-        
-    }, [userInput])
-    
-
-    if (!user) {
-        return (
-            <Container size={"4"} className="mt-4">
-                <Text size={"7"}>{t("errors.unauthorized")}</Text>
-            </Container>
-        );
-    }
-
     return (
         <>
             <Container className="mt-10">
+                <input
+                    placeholder={"Post title"}
+                    className="mb-2 border-0 border-b-[1px] 
+                                outline-none w-full border-b-gray-400
+                                text-[60px] pl-4 pr-4 font-times"
+                ></input>
                 <Editor onChange={setUserInput} />
+                <ArticleViewer htmlToParse={userInput} />
             </Container>
         </>
     );

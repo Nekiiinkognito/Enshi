@@ -7,6 +7,9 @@ export default {
                 "primary-color": "var(--primary-color)",
                 "secondary-color": "var(--secondary-color)",
             },
+            fontFamily: {
+                'times': "Times New Roman"
+            },
             animation: {
                 appear: "appear 0.25s",
                 widthOut: "widthOut cubic-bezier(0.4, 0, 0.6, 1) 0.4s",

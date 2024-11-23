@@ -13,7 +13,7 @@ import { userAtom } from "../../../../AtomStore/AtomStore";
 
 export default function UserButton() {
     const user = useAtomValue(userAtom);
-    const {t} = useTranslation()
+    const { t } = useTranslation();
 
     return (
         <div className="">
@@ -26,7 +26,7 @@ export default function UserButton() {
 
                 <DropdownMenu.Content className="w-fit">
                     <DropdownMenu.Item>
-                        <Link to={"/profile"}>
+                        <Link to={"/user/:user-id/profile"}>
                             <Flex className="justify-between gap-2">
                                 <Icon>
                                     <PersonIcon />
@@ -38,12 +38,14 @@ export default function UserButton() {
                     </DropdownMenu.Item>
 
                     <DropdownMenu.Item>
-                        <Flex className="justify-between gap-2">
-                            <Icon>
-                                <LaptopIcon />
-                            </Icon>
-                            <Text>{t("yourBlogs")}</Text>
-                        </Flex>
+                        <Link to={"/user/blogs"}>
+                            <Flex className="justify-between gap-2">
+                                <Icon>
+                                    <LaptopIcon />
+                                </Icon>
+                                <Text>{t("yourBlogs")}</Text>
+                            </Flex>
+                        </Link>
                     </DropdownMenu.Item>
 
                     <DropdownMenu.Separator />
@@ -57,12 +59,14 @@ export default function UserButton() {
                                 <Text>{t("signOut")}</Text>
                             </Flex>
                         ) : (
-                            <Flex className="justify-between gap-2">
-                                <Icon>
-                                    <EnterIcon />
-                                </Icon>
-                                <Text>{t("signIn")}</Text>
-                            </Flex>
+                            <Link to={"/login"}>
+                                <Flex className="justify-between gap-2">
+                                    <Icon>
+                                        <EnterIcon />
+                                    </Icon>
+                                    <Text>{t("signIn")}</Text>
+                                </Flex>
+                            </Link>
                         )}
                     </DropdownMenu.Item>
                 </DropdownMenu.Content>

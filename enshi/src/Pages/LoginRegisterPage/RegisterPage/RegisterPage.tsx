@@ -59,6 +59,7 @@ export default function RegisterPage() {
                 {t("registerForm")}
             </Heading>
             <Form.Root
+            className="flex flex-col gap-2"
                 onSubmit={(e) => {
                     e.preventDefault();
                     let formData = new FormData(
@@ -74,7 +75,7 @@ export default function RegisterPage() {
                     registerMutation.mutate(registerData);
                 }}
             >
-                <Form.Field className="mb-2.5 gap-0.5 grid" name="username">
+                <Form.Field className="gap-0.5 grid" name="username">
                     <div className="flex items-baseline justify-between gap-2">
                         <Form.Label>
                             <Text size={"4"}>{t("username")}</Text>
@@ -106,7 +107,7 @@ export default function RegisterPage() {
                     </Form.Control>
                 </Form.Field>
 
-                <Form.Field className="mb-2.5 gap-0.5 grid" name="email">
+                <Form.Field className="gap-0.5 grid" name="email">
                     <div className="flex items-baseline justify-between gap-2">
                         <Form.Label>
                             <Text size={"4"}>{t("email")}</Text>
@@ -141,7 +142,7 @@ export default function RegisterPage() {
                     </Form.Control>
                 </Form.Field>
 
-                <Form.Field className="mb-2.5 gap-0.5 grid" name="password">
+                <Form.Field className="gap-0.5 grid" name="password">
                     <div className="flex items-baseline justify-between gap-2">
                         <Form.Label>
                             <Text size={"4"}>{t("password")}</Text>
@@ -182,7 +183,7 @@ export default function RegisterPage() {
                 </Form.Field>
 
                 <Form.Field
-                    className="mb-2.5 gap-0.5 grid"
+                    className="gap-0.5 grid"
                     name="conf-password"
                 >
                     <div className="flex items-baseline justify-between">
@@ -237,8 +238,8 @@ export default function RegisterPage() {
                     {t("errors.invalidRegisterData")}
                 </Text>
 
-                <Form.Submit className="flex justify-center" asChild>
-                    <Button type="submit" className="w-1/3 m-auto">
+                <Form.Submit className="flex justify-center mt-2" asChild>
+                    <Button type="submit" className="w-full m-auto">
                         <Text size={"3"}>{t("submit")}</Text>
                     </Button>
                 </Form.Submit>

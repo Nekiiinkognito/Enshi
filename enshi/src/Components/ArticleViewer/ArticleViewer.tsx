@@ -1,11 +1,19 @@
 import { Container } from "@radix-ui/themes";
-import React from "react";
+import { Interweave } from "interweave";
+import { useParams } from "react-router-dom";
 
-export default function ArticleViewer() {
+type TArticleViewer = {
+    htmlToParse?: string;
+}
+
+export default function ArticleViewer(props: TArticleViewer) {
+    const queryPapms = useParams()
+
     return (
         <>
             <div className="ql-snow">
                 <Container className="mt-4 ql-editor">
+                    <Interweave content={props?.htmlToParse || ""} /> 
                 </Container>
             </div>
         </>

@@ -4,6 +4,7 @@ import {
     Route,
     useRouteError,
 } from "react-router-dom";
+import AuthPageWrapper from "../Pages/AuthPageWrapper/AuthPageWrapper";
 import LoginPage from "../Pages/LoginRegisterPage/LoginPage/LoginPage";
 import RegisterPage from "../Pages/LoginRegisterPage/RegisterPage/RegisterPage";
 import MainPage from "../Pages/MainPage/MainPage";
@@ -30,7 +31,9 @@ export const routes = createRoutesFromElements(
             <Route
                 path="/create"
                 element={
-                    <PostCreatorPage />
+                    <AuthPageWrapper>
+                        <PostCreatorPage />
+                    </AuthPageWrapper>
                 }
             ></Route>
         </Route>
