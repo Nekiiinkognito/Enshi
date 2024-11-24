@@ -10,7 +10,7 @@ export default function AuthPageWrapper(props: React.PropsWithChildren) {
     const navigate = useNavigate();
 
     if (!user) {
-        navigate("/login")
+        navigate("/login");
         return (
             <Container size={"4"} className="mt-4">
                 <Text size={"7"}>{t("errors.unauthorized")}</Text>

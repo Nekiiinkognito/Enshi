@@ -1,4 +1,4 @@
-import { Spinner } from "@radix-ui/themes";
+import { Box, Flex, Spinner } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { Outlet } from "react-router-dom";
@@ -20,7 +20,7 @@ export default function MainPage() {
         queryFn: async () => {
             try {
                 const response = await axiosLocalhost.get("/auth/check");
-                
+
                 setUserData({
                     isAdmin: response.data["is_admin"],
                     username: response.data["username"],
@@ -52,10 +52,14 @@ export default function MainPage() {
                     <Spinner size={"3"} />
                 </div>
             ) : (
-                <>
-                    <NavBar />
-                    <Outlet />
-                </>
+                <Flex direction={"column"} className="min-h-[100vh] max-h-[100vh]">
+                    <Box flexGrow={"1"} className="flex-[1]">
+                        <NavBar />
+                    </Box>
+                    <Box flexGrow={"100"} className="flex flex-col overflow-auto">
+                        <Outlet />
+                    </Box>
+                </Flex>
             )}
         </>
     );

@@ -21,12 +21,13 @@ export const routes = createRoutesFromElements(
     <>
         <Route path="/" errorElement={<ErrorBoundary />} element={<MainPage />}>
             <Route index element={<Text size={"5"}>Cringer path</Text>} />
+
             <Route
                 path="/a?/c"
                 element={
                     <Text weight={"regular"}>Cringer path, but this a</Text>
                 }
-            ></Route>
+            />
 
             <Route
                 path="/create"

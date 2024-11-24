@@ -1,26 +1,42 @@
-import { Container } from "@radix-ui/themes";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import ArticleViewer from "../../Components/ArticleViewer/ArticleViewer";
+import { Box, Container, Flex } from "@radix-ui/themes";
+import { useSetAtom } from "jotai";
+import {
+    postCreationAtom,
+    postCreationTitleAtom
+} from "../../AtomStore/AtomStore";
 import Editor from "../../Components/Editor/Editor";
+import SubmitPostButton from "./SubmitPostButton/SubmitPostButton";
 
 export default function PostCreatorPage() {
-    const [userInput, setUserInput] = useState("");
-
-    const { t } = useTranslation();
-
+    const setTitleValue = useSetAtom(postCreationTitleAtom);
+    const setContentValue = useSetAtom(postCreationAtom);
+    
     return (
         <>
-            <Container className="mt-10">
-                <input
-                    placeholder={"Post title"}
-                    className="mb-2 border-0 border-b-[1px] 
-                                outline-none w-full border-b-gray-400
-                                text-[60px] pl-4 pr-4 font-times"
-                ></input>
-                <Editor onChange={setUserInput} />
-                <ArticleViewer htmlToParse={userInput} />
-            </Container>
+            
+            <Box className="flex flex-col flex-1">
+                <Flex gap={"4"} direction={"column"} className="flex-[1]">
+                    <Container className="flex-[1]">
+                        <input
+                            placeholder={"Post title"}
+                            className="mb-2 border-0 border-b-[1px] 
+                        outline-none w-full border-b-gray-400
+                        text-[60px] pl-4 pr-4 font-times"
+                            onChange={(e) => {
+                                setTitleValue(e.target.value);
+                            }}
+                        />
+                    </Container>
+
+                    <Container className="overflow-y-auto flex-grow-[100]">
+                        <Editor onChange={setContentValue} />
+                    </Container>
+
+                    <Box className="flex justify-center flex-[1] mb-4">
+                        <SubmitPostButton className="text-2xl rounded-full w-52" />
+                    </Box>
+                </Flex>
+            </Box>
         </>
     );
 }

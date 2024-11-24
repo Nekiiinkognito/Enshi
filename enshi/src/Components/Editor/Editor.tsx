@@ -11,13 +11,13 @@ import ReactQuill from "react-quill";
 type TEditor = {
     readOnly?: boolean;
     defaultValue?: string | Delta;
-    onChange: (d: string) => void;
+    onChange?: (d: string) => void;
     onSelectionChange?: any;
 };
 
 const modules = {
     toolbar: [
-        [{ header: [1, 2, 3, false] }],
+        [{ header: [1, 2, 3, 4, 5, false] }],
         ["bold", "italic", "underline", "strike", "blockquote", "span-wrapper"],
         [
             { list: "ordered" },
@@ -28,10 +28,7 @@ const modules = {
         ["link", "image"],
         ["clean"],
         [{ align: [] }],
-    ],
-    clipboard: {
-        matchVisual: true,
-      },
+    ]
 };
 
 /**
@@ -52,32 +49,13 @@ const Editor = forwardRef((props: TEditor) => {
             setQuill(null);
         };
     }, [editor.current]);
-
-    useEffect(() => {
-        let Inline = Quill.import('attributors/style/size');
-        console.log(Inline);
-        
-        // //@ts-ignore
-        // class BoldBlot extends Inline {}
-        // //@ts-ignore
-        // BoldBlot.blotName = 'bold1';
-        // //@ts-ignore
-        // BoldBlot.tagName = 'strong';
-        // console.log(BoldBlot, true);
-        
-
-        Quill.register(Inline as any, true);
-      return () => {
-    
-      }
-    }, [])
     
 
     const changeHandler = (val: string, _changeDelta: Delta, _source: Sources, _editor: ReactQuill.UnprivilegedEditor) => {
         console.log(val);
         console.log(JSON.stringify(quill?.getContents().ops, null, 2))
         let fullDelta = quill?.getContents()
-        props.onChange(val || "")
+       if (props.onChange) props.onChange(val || "")
         setValue(fullDelta || new Delta())
     }
 
@@ -87,8 +65,6 @@ const Editor = forwardRef((props: TEditor) => {
                 value={value}
                 ref={editor}
                 modules={modules}
-                formats={['bold1']}
-
 
                 onChange={changeHandler}
                 
