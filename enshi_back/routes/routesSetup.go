@@ -5,6 +5,7 @@ import (
 	"enshi/middleware/getters"
 	"enshi/routes/authRoutes"
 	"enshi/routes/blogRoutes"
+	bookmarksroutes "enshi/routes/bookmarksRoutes"
 	"enshi/routes/postsRoutes"
 	"enshi/routes/userProfileRoutes"
 	"net/http"
@@ -112,6 +113,14 @@ func SetupRotes(g *gin.Engine) error {
 	profilesGroup.PUT(
 		"profiles",
 		userProfileRoutes.UpdateUserProfile,
+	)
+
+	bookmarksGroup := g.Group("/")
+	bookmarksGroup.Use(middleware.BookmarksMiddleware())
+
+	bookmarksGroup.POST(
+		"bookmarks/:post-id",
+		bookmarksroutes.CreateBookmark,
 	)
 
 	// Admin group routes

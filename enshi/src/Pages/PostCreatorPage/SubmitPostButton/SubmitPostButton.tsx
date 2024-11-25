@@ -1,6 +1,6 @@
 import { Button } from "@radix-ui/themes";
 import { useMutation } from "@tanstack/react-query";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -16,15 +16,20 @@ type TSubmitPostButton = {
 
 export default function SubmitPostButton(props: TSubmitPostButton) {
     const { t } = useTranslation();
-    const contentValue = useAtomValue(postCreationAtom);
-    const titleValue = useAtomValue(postCreationTitleAtom);
-
-    const navigate = useNavigate();
 
     const [isDisabled, setIsDisabled] = useState(false);
 
+    const [contentValue, setContentValue] = useAtom(postCreationAtom);
+    const [titleValue, setTitleValue] = useAtom(postCreationTitleAtom);
+
+    const navigate = useNavigate();
+
     const postMutation = useMutation({
         mutationFn: async () => {
+            if (!titleValue) throw new Error("no title provided");
+            if (!contentValue || contentValue === "<p><br></p>")
+                throw new Error("no content provided");
+
             axiosLocalhost.post("/posts", {
                 title: titleValue,
                 content: contentValue,
@@ -37,6 +42,8 @@ export default function SubmitPostButton(props: TSubmitPostButton) {
             setIsDisabled(false);
         },
         onSuccess: () => {
+            setContentValue("");
+            setTitleValue("");
             navigate("/");
         },
     });

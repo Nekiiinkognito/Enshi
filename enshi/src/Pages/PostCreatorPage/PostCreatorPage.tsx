@@ -1,5 +1,5 @@
 import { Box, Container, Flex } from "@radix-ui/themes";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import {
     postCreationAtom,
     postCreationTitleAtom
@@ -8,7 +8,7 @@ import Editor from "../../Components/Editor/Editor";
 import SubmitPostButton from "./SubmitPostButton/SubmitPostButton";
 
 export default function PostCreatorPage() {
-    const setTitleValue = useSetAtom(postCreationTitleAtom);
+    const [titleValue, setTitleValue] = useAtom(postCreationTitleAtom);
     const setContentValue = useSetAtom(postCreationAtom);
     
     return (
@@ -20,11 +20,12 @@ export default function PostCreatorPage() {
                         <input
                             placeholder={"Post title"}
                             className="mb-2 border-0 border-b-[1px] 
-                        outline-none w-full border-b-gray-400
-                        text-[60px] pl-4 pr-4 font-times"
+                                outline-none w-full border-b-gray-400
+                                text-[60px] pl-4 pr-4 font-times"
                             onChange={(e) => {
                                 setTitleValue(e.target.value);
                             }}
+                            value={titleValue}
                         />
                     </Container>
 

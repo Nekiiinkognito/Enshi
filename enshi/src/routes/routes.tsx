@@ -4,6 +4,7 @@ import {
     Route,
     useRouteError,
 } from "react-router-dom";
+import ArticleViewer from "../Components/ArticleViewer/ArticleViewer";
 import AuthPageWrapper from "../Pages/AuthPageWrapper/AuthPageWrapper";
 import LoginPage from "../Pages/LoginRegisterPage/LoginPage/LoginPage";
 import RegisterPage from "../Pages/LoginRegisterPage/RegisterPage/RegisterPage";
@@ -36,7 +37,9 @@ export const routes = createRoutesFromElements(
                         <PostCreatorPage />
                     </AuthPageWrapper>
                 }
-            ></Route>
+            />
+
+            <Route path="/posts/:postId" element={<ArticleViewer />} />
         </Route>
 
         <Route
