@@ -13,6 +13,9 @@ const createPostVote = `-- name: CreatePostVote :one
 INSERT INTO public.post_votes
 (post_id, user_id, vote)
 VALUES($1, $2, $3)
+ON CONFLICT (user_id, post_id)
+DO UPDATE SET
+    vote = $3
 RETURNING post_id, user_id, vote
 `
 

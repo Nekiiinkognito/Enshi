@@ -1,4 +1,4 @@
-package bookmarksroutes
+package voteroutes
 
 import (
 	"context"
@@ -6,14 +6,15 @@ import (
 	db_repo "enshi/db/go_queries"
 	"enshi/db_connection"
 	"enshi/middleware/getters"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func CreateBookmark(c *gin.Context) {
-	var bookmarkParams db_repo.CreateBookmarkParams
+func GetVote(c *gin.Context) {
+	var postVoteParams db_repo.GetPostVoteParams
 
-	if err := c.BindJSON(&bookmarkParams); err != nil {
+	if err := c.BindJSON(&postVoteParams); err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return
 	}
@@ -23,13 +24,15 @@ func CreateBookmark(c *gin.Context) {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return
 	}
-	bookmarkParams.UserID = userId
+	postVoteParams.UserID = userId
 
 	query := db_repo.New(db_connection.Dbx)
-	if _, err := query.CreateBookmark(context.Background(), bookmarkParams); err != nil {
+	if voteData, err := query.GetPostVote(context.Background(), postVoteParams); err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
+	} else {
+		c.IndentedJSON(http.StatusOK, gin.H{
+			"vote": voteData,
+		})
 	}
-
-	rest_api_stuff.OkAnswer(c, "Bookmark has been created!")
 }

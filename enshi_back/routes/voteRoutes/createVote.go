@@ -1,4 +1,4 @@
-package bookmarksroutes
+package voteroutes
 
 import (
 	"context"
@@ -10,10 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateBookmark(c *gin.Context) {
-	var bookmarkParams db_repo.CreateBookmarkParams
+func CreateVote(c *gin.Context) {
+	var postVoteParams db_repo.CreatePostVoteParams
 
-	if err := c.BindJSON(&bookmarkParams); err != nil {
+	if err := c.BindJSON(&postVoteParams); err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return
 	}
@@ -23,13 +23,13 @@ func CreateBookmark(c *gin.Context) {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return
 	}
-	bookmarkParams.UserID = userId
+	postVoteParams.UserID = userId
 
 	query := db_repo.New(db_connection.Dbx)
-	if _, err := query.CreateBookmark(context.Background(), bookmarkParams); err != nil {
+	if _, err := query.CreatePostVote(context.Background(), postVoteParams); err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
 	}
 
-	rest_api_stuff.OkAnswer(c, "Bookmark has been created!")
+	rest_api_stuff.OkAnswer(c, "Vote has been created!")
 }

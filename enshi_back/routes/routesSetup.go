@@ -8,6 +8,7 @@ import (
 	bookmarksroutes "enshi/routes/bookmarksRoutes"
 	"enshi/routes/postsRoutes"
 	"enshi/routes/userProfileRoutes"
+	voteroutes "enshi/routes/voteRoutes"
 	"net/http"
 	"strings"
 
@@ -121,6 +122,34 @@ func SetupRotes(g *gin.Engine) error {
 	bookmarksGroup.POST(
 		"bookmarks/:post-id",
 		bookmarksroutes.CreateBookmark,
+	)
+
+	bookmarksGroup.DELETE(
+		"bookmarks/:post-id",
+		bookmarksroutes.DeleteBookmark,
+	)
+
+	bookmarksGroup.GET(
+		"bookmarks/:post-id",
+		bookmarksroutes.GetBookmark,
+	)
+
+	postVoteGroup := g.Group("/")
+	postVoteGroup.Use(middleware.PostVotesMiddleware())
+
+	postVoteGroup.POST(
+		"post-votes/:post-id",
+		voteroutes.CreateVote,
+	)
+
+	postVoteGroup.DELETE(
+		"post-votes/:post-id",
+		voteroutes.DeleteVote,
+	)
+
+	postVoteGroup.GET(
+		"post-votes/:post-id",
+		voteroutes.GetVote,
 	)
 
 	// Admin group routes

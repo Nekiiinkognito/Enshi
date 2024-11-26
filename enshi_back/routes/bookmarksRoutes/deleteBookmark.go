@@ -10,8 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateBookmark(c *gin.Context) {
-	var bookmarkParams db_repo.CreateBookmarkParams
+func DeleteBookmark(c *gin.Context) {
+	var bookmarkParams db_repo.DeleteBookmarkParams
 
 	if err := c.BindJSON(&bookmarkParams); err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
@@ -26,10 +26,10 @@ func CreateBookmark(c *gin.Context) {
 	bookmarkParams.UserID = userId
 
 	query := db_repo.New(db_connection.Dbx)
-	if _, err := query.CreateBookmark(context.Background(), bookmarkParams); err != nil {
+	if err := query.DeleteBookmark(context.Background(), bookmarkParams); err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
 	}
 
-	rest_api_stuff.OkAnswer(c, "Bookmark has been created!")
+	rest_api_stuff.OkAnswer(c, "Bookmark has been deleted!")
 }
