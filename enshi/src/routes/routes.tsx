@@ -7,6 +7,7 @@ import {
 import ArticleViewer from "../Components/ArticleViewer/ArticleViewer";
 import AuthPageWrapper from "../Pages/AuthPageWrapper/AuthPageWrapper";
 import LoginPage from "../Pages/LoginRegisterPage/LoginPage/LoginPage";
+import PostRedactor from "../Pages/LoginRegisterPage/PostRedactor/PostRedactor";
 import RegisterPage from "../Pages/LoginRegisterPage/RegisterPage/RegisterPage";
 import MainPage from "../Pages/MainPage/MainPage";
 import PostCreatorPage from "../Pages/PostCreatorPage/PostCreatorPage";
@@ -40,6 +41,7 @@ export const routes = createRoutesFromElements(
             />
 
             <Route path="/posts/:postId" element={<ArticleViewer />} />
+            <Route path="/posts/change/:postId" element={<PostRedactor />} />
         </Route>
 
         <Route

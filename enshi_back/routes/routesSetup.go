@@ -36,6 +36,7 @@ func testAuth(c *gin.Context) {
 			"message":  "you are logged in, congrats!",
 			"username": userInfo.Username,
 			"is_admin": userInfo.IsAdmin,
+			"id":       userInfo.Id,
 		},
 	)
 }

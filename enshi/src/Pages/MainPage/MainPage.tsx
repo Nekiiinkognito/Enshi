@@ -24,6 +24,7 @@ export default function MainPage() {
                 setUserData({
                     isAdmin: response.data["is_admin"],
                     username: response.data["username"],
+                    id: response.data["id"],
                 });
                 return true;
             } catch (error) {

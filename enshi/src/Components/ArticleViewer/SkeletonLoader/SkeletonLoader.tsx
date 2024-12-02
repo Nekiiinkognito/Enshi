@@ -5,7 +5,7 @@ import {
     pText,
 } from "../../../constants/textForSkeleton";
 
-export default function SkeletonLoader() {
+export default function SkeletonPostLoader() {
     return (
         <Container size={"2"} className="mt-4">
             <Skeleton>

@@ -34,7 +34,8 @@ export default function RegisterPage() {
             let response = await axiosLocalhost.post("/users", JSON.stringify(data));
             setUserAtom({
                 username: response.data.username,
-                isAdmin: false
+                isAdmin: false,
+                id: response.data.id,
             })
         },
 

@@ -33,6 +33,7 @@ export default function LoginPage() {
             setUserAtom({
                 username: response.data.username,
                 isAdmin: false,
+                id: response.data.id,
             });
         },
 
@@ -48,6 +49,7 @@ export default function LoginPage() {
                     setUserAtom({
                         username: userAtomValue?.username || "",
                         isAdmin: true,
+                        id: userAtomValue?.id,
                     });
                 }
             };
