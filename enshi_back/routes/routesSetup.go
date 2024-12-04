@@ -65,6 +65,12 @@ func SetupRotes(g *gin.Engine) error {
 		"posts/:post-id",
 		postsRoutes.GetPost,
 	)
+
+	postsGroup.GET(
+		"posts/random",
+		postsRoutes.GetRandomPost,
+	)
+
 	postsGroup.PUT(
 		"posts/:post-id",
 		postsRoutes.UpdatePost,

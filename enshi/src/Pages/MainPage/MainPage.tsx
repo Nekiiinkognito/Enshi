@@ -12,6 +12,10 @@ const RETRY_INTERVAL_IN_SECONDS = 1;
 const SECONDS_IN_MINUTE = 60;
 const MILLS_IN_SECOND = 1000;
 
+const TAGS = Array.from({ length: 50 }).map(
+    (_, i, a) => `v1.2.0-beta.${a.length - i}`
+);
+
 export default function MainPage() {
     const setUserData = useSetAtom(userAtom);
 
@@ -53,11 +57,14 @@ export default function MainPage() {
                     <Spinner size={"3"} />
                 </div>
             ) : (
-                <Flex direction={"column"} className="min-h-[100vh] max-h-[100vh]">
+                <Flex
+                    direction={"column"}
+                    className="min-h-[100vh] max-h-[100vh] overflow-hidden"
+                >
                     <Box flexGrow={"1"} className="flex-[1]">
                         <NavBar />
                     </Box>
-                    <Box flexGrow={"100"} className="flex flex-col overflow-auto">
+                    <Box flexGrow={"100"} className="flex overflow-hidden flex-">
                         <Outlet />
                     </Box>
                 </Flex>

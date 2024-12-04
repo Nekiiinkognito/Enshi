@@ -14,7 +14,7 @@ type TArticleViewer = {
 
 export default function ArticleViewer(props: TArticleViewer) {
     let queryParams = useParams();
-    const user = useAtomValue(userAtom)
+    const user = useAtomValue(userAtom);
 
     const { data, isPending } = useQuery({
         queryKey: [`post_${queryParams["postId"]}`],
@@ -25,31 +25,32 @@ export default function ArticleViewer(props: TArticleViewer) {
 
             return response.data;
         },
-    })
-    
+    });
 
     if (isPending) return <SkeletonPostLoader />;
 
     return (
         <>
-            <div className="ql-snow">
-                <Container size={"2"} className="mt-4">
-                    <Flex direction={"column"}>
-                        <Text className="mb-2" as="div" size={"9"}>
-                            {data.title}
-                        </Text>
-                        <Flex className="mt-4 mb-2">
-                            <div hidden={data.user_id != user?.id}>
-                                <ChangePostButton
-                                    postId={queryParams["postId"] || ""}
-                                />
-                            </div>
+            <Container size={"3"}>
+                <div className="ql-snow ql-editor">
+                    <Container size={"2"} className="mt-4">
+                        <Flex direction={"column"}>
+                            <Text className="mb-2" as="div" size={"9"}>
+                                {data.title}
+                            </Text>
+                            <Flex className="mt-4 mb-2">
+                                <div hidden={data.user_id != user?.id}>
+                                    <ChangePostButton
+                                        postId={queryParams["postId"] || ""}
+                                    />
+                                </div>
+                            </Flex>
                         </Flex>
-                    </Flex>
-                    <Separator size={"4"} className="mb-2" />
-                    <Interweave content={data.content} />
-                </Container>
-            </div>
+                        <Separator size={"4"} className="mb-2" />
+                        <Interweave content={data.content} />
+                    </Container>
+                </div>
+            </Container>
         </>
     );
 }

@@ -11,6 +11,7 @@ import PostRedactor from "../Pages/LoginRegisterPage/PostRedactor/PostRedactor";
 import RegisterPage from "../Pages/LoginRegisterPage/RegisterPage/RegisterPage";
 import MainPage from "../Pages/MainPage/MainPage";
 import PostCreatorPage from "../Pages/PostCreatorPage/PostCreatorPage";
+import RandomPostsPage from "../Pages/RandomPostsPage/RandomPostsPage";
 
 function ErrorBoundary() {
     let error = useRouteError();
@@ -22,12 +23,12 @@ function ErrorBoundary() {
 export const routes = createRoutesFromElements(
     <>
         <Route path="/" errorElement={<ErrorBoundary />} element={<MainPage />}>
-            <Route index element={<Text size={"5"}>Cringer path</Text>} />
+            <Route index element={<RandomPostsPage />} />
 
             <Route
                 path="/a?/c"
                 element={
-                    <Text weight={"regular"}>Cringer path, but this a</Text>
+                    <Text weight={"regular"}>This page is yet to be created</Text>
                 }
             />
 

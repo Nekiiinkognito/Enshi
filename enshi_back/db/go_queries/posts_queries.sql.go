@@ -146,6 +146,47 @@ func (q *Queries) GetPostsByUserId(ctx context.Context, userID int64) ([]Post, e
 	return items, nil
 }
 
+const getRandomPosts = `-- name: GetRandomPosts :many
+SELECT post_id, blog_id, user_id, title, created_at
+FROM public.posts
+ORDER BY RANDOM()
+LIMIT $1
+`
+
+type GetRandomPostsRow struct {
+	PostID    int64            `json:"post_id"`
+	BlogID    pgtype.Int8      `json:"blog_id"`
+	UserID    int64            `json:"user_id"`
+	Title     pgtype.Text      `json:"title"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
+}
+
+func (q *Queries) GetRandomPosts(ctx context.Context, limit int32) ([]GetRandomPostsRow, error) {
+	rows, err := q.db.Query(ctx, getRandomPosts, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetRandomPostsRow
+	for rows.Next() {
+		var i GetRandomPostsRow
+		if err := rows.Scan(
+			&i.PostID,
+			&i.BlogID,
+			&i.UserID,
+			&i.Title,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updatePostBlogId = `-- name: UpdatePostBlogId :exec
 UPDATE public.posts
 SET blog_id=$2, updated_at=CURRENT_TIMESTAMP

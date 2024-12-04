@@ -34,3 +34,9 @@ UPDATE public.posts
 SET blog_id=$2, updated_at=CURRENT_TIMESTAMP
 WHERE post_id = $1
 RETURNING *;
+
+-- name: GetRandomPosts :many
+SELECT post_id, blog_id, user_id, title, created_at
+FROM public.posts
+ORDER BY RANDOM()
+LIMIT $1;
