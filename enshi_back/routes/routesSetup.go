@@ -155,8 +155,13 @@ func SetupRotes(g *gin.Engine) error {
 	)
 
 	postVoteGroup.GET(
-		"post-votes/:post-id",
+		"post-vote/:post-id",
 		voteroutes.GetVote,
+	)
+
+	postVoteGroup.GET(
+		"post-votes/:post-id",
+		voteroutes.GetVotes,
 	)
 
 	// Admin group routes

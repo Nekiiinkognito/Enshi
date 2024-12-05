@@ -30,6 +30,8 @@ func PostVotePolicies(c *gin.Context) (bool, []error) {
 	case READ_VOTE:
 		return rules.CheckRule(c, postvoterules.PostVoteReadRule)
 
+	default:
+		return rules.CheckRule(c, postvoterules.PostVotesReadRule)
 	}
 
 	return false, nil

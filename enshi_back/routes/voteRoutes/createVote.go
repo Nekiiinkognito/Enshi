@@ -25,6 +25,13 @@ func CreateVote(c *gin.Context) {
 	}
 	postVoteParams.UserID = userId
 
+	postId, err := getters.GetInt64Param(c, "post-id")
+	if err != nil {
+		rest_api_stuff.BadRequestAnswer(c, err)
+		return
+	}
+	postVoteParams.PostID = postId
+
 	query := db_repo.New(db_connection.Dbx)
 	if _, err := query.CreatePostVote(context.Background(), postVoteParams); err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)

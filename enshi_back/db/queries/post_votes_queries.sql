@@ -21,3 +21,9 @@ RETURNING *;
 SELECT vote
 FROM public.post_votes p_v
 WHERE p_v.user_id = $1 and p_v.post_id = $2;
+
+-- name: GetPostVotes :one
+SELECT count (*) FILTER (WHERE vote = TRUE) as upvotes,
+count (*) FILTER (WHERE vote = FALSE) as downvotes
+FROM public.post_votes
+WHERE post_id = $1;

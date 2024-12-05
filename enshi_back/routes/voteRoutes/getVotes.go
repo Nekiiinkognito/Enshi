@@ -11,30 +11,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetVote(c *gin.Context) {
-	var postVoteParams db_repo.GetPostVoteParams
-
-	userId, err := getters.GetUserIdFromContext(c)
-	if err != nil {
-		rest_api_stuff.BadRequestAnswer(c, err)
-		return
-	}
-	postVoteParams.UserID = userId
-
+func GetVotes(c *gin.Context) {
 	postId, err := getters.GetInt64Param(c, "post-id")
+
 	if err != nil {
 		rest_api_stuff.BadRequestAnswer(c, err)
 		return
 	}
-	postVoteParams.PostID = postId
 
 	query := db_repo.New(db_connection.Dbx)
-	if voteData, err := query.GetPostVote(context.Background(), postVoteParams); err != nil {
+	if voteData, err := query.GetPostVotes(context.Background(), postId); err != nil {
 		rest_api_stuff.InternalErrorAnswer(c, err)
 		return
 	} else {
-		c.IndentedJSON(http.StatusOK, gin.H{
-			"vote": voteData,
-		})
+		c.IndentedJSON(http.StatusOK, voteData)
 	}
 }

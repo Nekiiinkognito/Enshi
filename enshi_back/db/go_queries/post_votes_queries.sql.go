@@ -65,6 +65,25 @@ func (q *Queries) GetPostVote(ctx context.Context, arg GetPostVoteParams) (bool,
 	return vote, err
 }
 
+const getPostVotes = `-- name: GetPostVotes :one
+SELECT count (*) FILTER (WHERE vote = TRUE) as upvotes,
+count (*) FILTER (WHERE vote = FALSE) as downvotes
+FROM public.post_votes
+WHERE post_id = $1
+`
+
+type GetPostVotesRow struct {
+	Upvotes   int64 `json:"upvotes"`
+	Downvotes int64 `json:"downvotes"`
+}
+
+func (q *Queries) GetPostVotes(ctx context.Context, postID int64) (GetPostVotesRow, error) {
+	row := q.db.QueryRow(ctx, getPostVotes, postID)
+	var i GetPostVotesRow
+	err := row.Scan(&i.Upvotes, &i.Downvotes)
+	return i, err
+}
+
 const updateVote = `-- name: UpdateVote :one
 UPDATE public.post_votes
 SET vote=$1

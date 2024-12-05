@@ -3,13 +3,14 @@ package middleware
 import (
 	postvotespolicies "enshi/ABAC/PostVotesPolicies"
 	"enshi/ABAC/rules"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func PostVotesMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		a := strings.Split(c.Request.URL.Path, "/")[1]
 		switch c.Request.Method {
 		case "DELETE":
 			c.Set("target", postvotespolicies.DELETE_VOTE)
@@ -18,7 +19,11 @@ func PostVotesMiddleware() gin.HandlerFunc {
 			c.Set("target", postvotespolicies.CREATE_VOTE)
 
 		case "GET":
-			c.Set("target", postvotespolicies.READ_VOTE)
+			if a != "post-votes" {
+				c.Set("target", postvotespolicies.READ_VOTE)
+			} else {
+				c.Set("target", "")
+			}
 		}
 
 		isAllowed, errors := postvotespolicies.PostVotePolicies(c)

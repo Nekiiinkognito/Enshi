@@ -1,4 +1,4 @@
-import { Container, Flex, Separator, Text } from "@radix-ui/themes";
+import { Box, Container, Flex, Separator, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { Interweave } from "interweave";
 import { useAtomValue } from "jotai";
@@ -7,6 +7,8 @@ import { axiosLocalhost } from "../../api/axios/axios";
 import { userAtom } from "../../AtomStore/AtomStore";
 import ChangePostButton from "./ChangePostButton/ChangePostButton";
 import SkeletonPostLoader from "./SkeletonLoader/SkeletonLoader";
+import VoteButton, { DOWNVOTE, UPVOTE } from "./VoteButton/VoteButton";
+import VoteCounter from "./VoteCounter/VoteCounter";
 
 type TArticleViewer = {
     htmlToParse?: string;
@@ -38,12 +40,26 @@ export default function ArticleViewer(props: TArticleViewer) {
                             <Text className="mb-2" as="div" size={"9"}>
                                 {data.title}
                             </Text>
-                            <Flex className="mt-4 mb-2">
-                                <div hidden={data.user_id != user?.id}>
+                            <Flex gap={"3"} className="mt-4 mb-2">
+                                <Flex gap={"1"}>
+                                    <VoteButton
+                                        vote={UPVOTE}
+                                        postId={queryParams["postId"] || ""}
+                                    />
+
+                                    <VoteCounter postId={queryParams["postId"] || ""} />
+
+                                    <VoteButton
+                                        vote={DOWNVOTE}
+                                        postId={queryParams["postId"] || ""}
+                                    />
+                                </Flex>
+
+                                <Box hidden={data.user_id != user?.id}>
                                     <ChangePostButton
                                         postId={queryParams["postId"] || ""}
                                     />
-                                </div>
+                                </Box>
                             </Flex>
                         </Flex>
                         <Separator size={"4"} className="mb-2" />
