@@ -174,5 +174,12 @@ func SetupRotes(g *gin.Engine) error {
 	authGroup.Use(middleware.AuthMiddleware())
 	authGroup.GET("check", testAuth)
 
+	temporal := g.Group("/")
+	temporal.Use(middleware.AuthMiddleware())
+	temporal.GET(
+		"/user/blogs",
+		blogRoutes.GetUserBlogs,
+	)
+
 	return nil
 }
