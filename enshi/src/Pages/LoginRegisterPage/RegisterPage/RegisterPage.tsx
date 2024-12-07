@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosLocalhost } from "../../../api/axios/axios";
 import { userAtom } from "../../../AtomStore/AtomStore";
 import UseCapsLock from "../../../hooks/useCapsLock";
@@ -244,6 +244,21 @@ export default function RegisterPage() {
                         <Text size={"3"}>{t("submit")}</Text>
                     </Button>
                 </Form.Submit>
+
+                <Text size={"1"} color="gray" className="block w-full text-center">
+                    {t("alreadyRegistered")}{" "}
+                    <Link to="/login">
+                        <Text className="underline" weight={"bold"}>{t("logIn")}</Text>
+                    </Link>{" "}
+                    {t("now")}
+                </Text>
+
+                <Text size={"1"} color="gray" className="block w-full text-center">
+                    {t("byPressingTheButton")}{" "}
+                    <Link to="/register">
+                        <Text className="underline" weight={"bold"}>{t("termsOfService")}</Text>.
+                    </Link>
+                </Text>
             </Form.Root>
         </Card>
     );

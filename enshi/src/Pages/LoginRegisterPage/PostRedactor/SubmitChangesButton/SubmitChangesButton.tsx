@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosLocalhost } from "../../../../api/axios/axios";
+import useToast from "../../../../hooks/useToast";
 
 type TSubmitChangesButton = {
     className: string;
@@ -15,6 +16,7 @@ export default function SubmitChangesButton(props: TSubmitChangesButton) {
     const { t } = useTranslation();
 
     const [isDisabled, setIsDisabled] = useState(false);
+    const createToast = useToast();
 
     const navigate = useNavigate();
     const queryParams = useParams();
@@ -37,6 +39,7 @@ export default function SubmitChangesButton(props: TSubmitChangesButton) {
             setIsDisabled(false);
         },
         onSuccess: () => {
+            createToast({title: "Post has been changed!"})
             navigate("/");
         },
     });

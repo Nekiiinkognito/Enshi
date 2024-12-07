@@ -1,15 +1,19 @@
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { useThemeContext, Button, Heading } from "@radix-ui/themes";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Button, Heading, useThemeContext } from "@radix-ui/themes";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function CustomNavigationMenu() {
+
+    const {t} = useTranslation()
+
     return (
         <div className="flex-1">
             <NavigationMenu.Root orientation="horizontal">
                 <NavigationMenu.List className="flex items-center justify-start gap-8">
-                    <NavItem text="Home" to="/" />
+                    <NavItem text={t("home")} to="/" />
 
-                    <NavItem text="Following" to="/c" />
+                    <NavItem text={t("following")} to="/c" />
                 </NavigationMenu.List>
             </NavigationMenu.Root>
         </div>

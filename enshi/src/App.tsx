@@ -1,4 +1,4 @@
-import { Theme } from "@radix-ui/themes";
+import { Theme, ThemePanel } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -17,8 +17,8 @@ export default function App() {
             <ToastProvider>
                 <QueryClientProvider client={queryClient}>
                     <RouterProvider router={router} />
-                    {/* <ThemePanel /> */}
-                    <ReactQueryDevtools />
+                    <ThemePanel />
+                    <ReactQueryDevtools/>
                 </QueryClientProvider>
             </ToastProvider>
         </Theme>

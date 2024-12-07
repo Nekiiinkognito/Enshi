@@ -8,6 +8,7 @@ import (
 	bookmarksroutes "enshi/routes/bookmarksRoutes"
 	"enshi/routes/postsRoutes"
 	"enshi/routes/userProfileRoutes"
+	userroutes "enshi/routes/userRoutes"
 	voteroutes "enshi/routes/voteRoutes"
 	"net/http"
 	"strings"
@@ -176,9 +177,15 @@ func SetupRotes(g *gin.Engine) error {
 
 	temporal := g.Group("/")
 	temporal.Use(middleware.AuthMiddleware())
+
 	temporal.GET(
 		"/user/blogs",
 		blogRoutes.GetUserBlogs,
+	)
+
+	freeGroup.GET(
+		"/user/:user-id",
+		userroutes.GetUserUsername,
 	)
 
 	return nil

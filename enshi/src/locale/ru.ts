@@ -20,10 +20,25 @@ const ru = {
 
     registerForm: "Регистрация",
     loginForm: "Вход",
+
+    alreadyRegistered: "Уже есть аккаунт?",
     
     suggestRegister: "Не зарегистрированы?",
     register: "Создайте аккаунт",
     now: "сейчас!",
+
+    logIn: "Войдите",
+
+    byPressingTheButton: "Нажимая `Подтвердить`, вы соглашаетесь с нашими",
+    termsOfService: "Условиями предоставления услуг.",
+
+    updatePost: "Изменить",
+
+    discover: "Найдите что-то новое",
+
+    home: "Главная",
+    following: "Отслеживаемые",
+
 
     errors: {
         enterUsername: "Это обязательное поле",

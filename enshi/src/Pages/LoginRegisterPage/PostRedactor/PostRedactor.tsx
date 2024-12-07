@@ -30,7 +30,8 @@ export default function PostRedactor() {
                 return error;
             }
         },
-        gcTime: Infinity,
+        gcTime: 0,
+        refetchOnMount: true
     });
 
     return (

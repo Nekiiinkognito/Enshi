@@ -20,9 +20,23 @@ const en = {
     registerForm: "Register",
     loginForm: "Log in",
 
+    alreadyRegistered: "Already registered?",
+
     suggestRegister: "Don't have an account?",
     register: "Register",
     now: "now!",
+
+    logIn: "Log in",
+
+    updatePost: "Update",
+
+    byPressingTheButton: "By pressing the submit button you agree with our",
+    termsOfService: "Terms Of Service",
+
+    discover: "Discover something new...",
+
+    home: "Home",
+    following: "Following",
 
     errors: {
         enterUsername: "Please enter your username",

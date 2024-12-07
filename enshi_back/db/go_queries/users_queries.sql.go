@@ -152,6 +152,17 @@ func (q *Queries) GetUserByUsername(ctx context.Context, username string) (User,
 	return i, err
 }
 
+const getUserUsernameById = `-- name: GetUserUsernameById :one
+SELECT username FROM users WHERE user_id = $1
+`
+
+func (q *Queries) GetUserUsernameById(ctx context.Context, userID int64) (string, error) {
+	row := q.db.QueryRow(ctx, getUserUsernameById, userID)
+	var username string
+	err := row.Scan(&username)
+	return username, err
+}
+
 const updateUserPasswordHash = `-- name: UpdateUserPasswordHash :one
 UPDATE public.users
 SET "password"=$1
