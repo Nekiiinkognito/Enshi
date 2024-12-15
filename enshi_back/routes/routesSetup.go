@@ -1,6 +1,8 @@
 package routes
 
 import (
+	globalrules "enshi/ABAC/GlobalRules"
+	"enshi/ABAC/rules"
 	"enshi/middleware"
 	"enshi/middleware/getters"
 	"enshi/routes/authRoutes"
@@ -14,6 +16,10 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	POST_MIDDLEWARE = "post_middleware"
 )
 
 func testCookie(c *gin.Context) {
@@ -43,7 +49,72 @@ func testAuth(c *gin.Context) {
 }
 
 func SetupRotes(g *gin.Engine) error {
+	middlewareProvider := middleware.MiddlewareProvider{
+		Policies: make(map[string]middleware.Policy),
+	}
+
+	var policies = map[string]middleware.RulesToCheck{
+		POST_MIDDLEWARE: {
+			middleware.GET: {
+				Rules:           make([]rules.RuleFunction, 0),
+				MustBeCompleted: rules.ALL_RULES_MUST_BE_COMPLETED,
+			},
+			middleware.POST: {
+				Rules: []rules.RuleFunction{
+					globalrules.AuthorizedRule,
+				},
+				MustBeCompleted: rules.ALL_RULES_MUST_BE_COMPLETED,
+			},
+			middleware.PUT: {
+				Rules: []rules.RuleFunction{
+					globalrules.AuthorizedRule,
+					globalrules.IsOwnerOfThePostRule,
+				},
+				MustBeCompleted: rules.ALL_RULES_MUST_BE_COMPLETED,
+			},
+			middleware.DELETE: {
+				Rules: []rules.RuleFunction{
+					globalrules.AuthorizedRule,
+					globalrules.IsOwnerOfThePostRule,
+					globalrules.IsAdminRule,
+				},
+				MustBeCompleted: 2,
+			},
+		},
+	}
+
+	for middlewareName, rulesToCheck := range policies {
+		middlewareProvider.RegisterPolicy(middlewareName, rulesToCheck)
+	}
+
 	g.Use(middleware.CORSMiddleware())
+	g.Use(middleware.TargetMiddleware())
+
+	testGroup := g.Group("/test/")
+	testGroup.Use(middlewareProvider.GetMiddleware(POST_MIDDLEWARE))
+
+	testGroup.GET(
+		"posts/:post-id",
+		postsRoutes.GetPost,
+	)
+
+	testGroup.GET(
+		"posts/random",
+		postsRoutes.GetRandomPost,
+	)
+
+	testGroup.PUT(
+		"posts/:post-id",
+		postsRoutes.UpdatePost,
+	)
+	testGroup.POST(
+		"posts",
+		postsRoutes.CreatePost,
+	)
+	testGroup.DELETE(
+		"posts/:post-id",
+		postsRoutes.DeletePost,
+	)
 
 	// Free group routes
 	freeGroup := g.Group("/")
