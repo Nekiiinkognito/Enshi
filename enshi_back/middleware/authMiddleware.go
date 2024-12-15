@@ -1,8 +1,10 @@
 package middleware
 
 import (
+	rest_api_stuff "enshi/REST_API_stuff"
 	"enshi/auth"
 	"enshi/global"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,9 +13,14 @@ import (
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		// token := c.GetHeader("Authorization")
+		cookies := c.Request.CookiesNamed("auth_cookie")
+		if len(cookies) == 0 {
+			rest_api_stuff.UnauthorizedAnswer(c, fmt.Errorf("no token provided"))
+			c.Abort()
+			return
+		}
 
-		tokenFromCookies := c.Request.CookiesNamed("auth_cookie")[0].Value
+		tokenFromCookies := cookies[0].Value
 		cookieClimes, err := auth.ValidateToken(tokenFromCookies)
 		if err != nil {
 			c.IndentedJSON(http.StatusUnauthorized, gin.H{"error auth": err.Error()})
@@ -21,14 +28,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// claims, err := auth.ValidateToken(token)
-		// if err != nil {
-		// 	c.IndentedJSON(http.StatusUnauthorized, gin.H{"error auth": err.Error()})
-		// 	c.Abort()
-		// 	return
-		// }
-
-		// Claims -> data stored in token
 		c.Set(global.ContextUserId, cookieClimes["id"])
 		c.Set(global.ContextTokenData, cookieClimes)
 		c.Next()

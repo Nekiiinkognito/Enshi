@@ -19,6 +19,10 @@
     text-transform: uppercase;
   }
 
+  * {
+    font-family: "Times New Roman";
+  }
+
   /*!
  * Quill Editor v1.3.6
  * https://quilljs.com/

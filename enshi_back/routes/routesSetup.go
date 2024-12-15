@@ -2,10 +2,14 @@ package routes
 
 import (
 	"enshi/middleware"
+	"enshi/middleware/getters"
 	"enshi/routes/authRoutes"
 	"enshi/routes/blogRoutes"
+	bookmarksroutes "enshi/routes/bookmarksRoutes"
 	"enshi/routes/postsRoutes"
 	"enshi/routes/userProfileRoutes"
+	userroutes "enshi/routes/userRoutes"
+	voteroutes "enshi/routes/voteRoutes"
 	"net/http"
 	"strings"
 
@@ -19,6 +23,23 @@ func testCookie(c *gin.Context) {
 
 func testAdmin(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"message": "you are an admin, congrats!"})
+}
+
+func testAuth(c *gin.Context) {
+	userInfo, err := getters.GetClaimsFromContext(c)
+	if err != nil {
+		c.IndentedJSON(http.StatusUnauthorized, gin.H{"message": "you are not logged in"})
+
+	}
+	c.IndentedJSON(
+		http.StatusOK,
+		gin.H{
+			"message":  "you are logged in, congrats!",
+			"username": userInfo.Username,
+			"is_admin": userInfo.IsAdmin,
+			"id":       userInfo.Id,
+		},
+	)
 }
 
 func SetupRotes(g *gin.Engine) error {
@@ -45,6 +66,12 @@ func SetupRotes(g *gin.Engine) error {
 		"posts/:post-id",
 		postsRoutes.GetPost,
 	)
+
+	postsGroup.GET(
+		"posts/random",
+		postsRoutes.GetRandomPost,
+	)
+
 	postsGroup.PUT(
 		"posts/:post-id",
 		postsRoutes.UpdatePost,
@@ -97,11 +124,69 @@ func SetupRotes(g *gin.Engine) error {
 		userProfileRoutes.UpdateUserProfile,
 	)
 
+	bookmarksGroup := g.Group("/")
+	bookmarksGroup.Use(middleware.BookmarksMiddleware())
+
+	bookmarksGroup.POST(
+		"bookmarks/:post-id",
+		bookmarksroutes.CreateBookmark,
+	)
+
+	bookmarksGroup.DELETE(
+		"bookmarks/:post-id",
+		bookmarksroutes.DeleteBookmark,
+	)
+
+	bookmarksGroup.GET(
+		"bookmarks/:post-id",
+		bookmarksroutes.GetBookmark,
+	)
+
+	postVoteGroup := g.Group("/")
+	postVoteGroup.Use(middleware.PostVotesMiddleware())
+
+	postVoteGroup.POST(
+		"post-votes/:post-id",
+		voteroutes.CreateVote,
+	)
+
+	postVoteGroup.DELETE(
+		"post-votes/:post-id",
+		voteroutes.DeleteVote,
+	)
+
+	postVoteGroup.GET(
+		"post-vote/:post-id",
+		voteroutes.GetVote,
+	)
+
+	postVoteGroup.GET(
+		"post-votes/:post-id",
+		voteroutes.GetVotes,
+	)
+
 	// Admin group routes
 	adminGroup := g.Group("/admin/")
 	adminGroup.Use(middleware.AdminMiddleware())
 
-	adminGroup.GET("testAdmin", testAdmin)
+	adminGroup.GET("check", testAdmin)
+
+	authGroup := g.Group("/auth/")
+	authGroup.Use(middleware.AuthMiddleware())
+	authGroup.GET("check", testAuth)
+
+	temporal := g.Group("/")
+	temporal.Use(middleware.AuthMiddleware())
+
+	temporal.GET(
+		"/user/blogs",
+		blogRoutes.GetUserBlogs,
+	)
+
+	freeGroup.GET(
+		"/user/:user-id",
+		userroutes.GetUserUsername,
+	)
 
 	return nil
 }

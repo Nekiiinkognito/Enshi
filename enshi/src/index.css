@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+	.center-of-parent {
+		@apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%];
+	}
+}
 
 .radix-themes {
 	--default-font-family: "Times New Roman"; ;

@@ -1,25 +1,19 @@
-import Quill, { Delta,  } from "quill/core";
-import ReactQuill from "react-quill";
-import React, {
-    forwardRef,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "react";
 import Sources from "quill";
+import Quill, { Delta } from "quill/core";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import ReactQuill from "react-quill";
 
 type TEditor = {
     readOnly?: boolean;
     defaultValue?: string | Delta;
-    onChange: (d: string) => void; // TODO: make type
-    onSelectionChange?: any; // TODO same as before
+    onChange?: (d: string) => void;
+    onSelectionChange?: any;
 };
 
 const modules = {
     toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ header: [1, 2, 3, 4, 5, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote", "span-wrapper"],
         [
             { list: "ordered" },
             { list: "bullet" },
@@ -38,7 +32,9 @@ const modules = {
 const Editor = forwardRef((props: TEditor) => {
     const editor = useRef(null);
     const [quill, setQuill] = useState<Quill | null>(null);
-    const [value, setValue] = useState(new Delta())
+    const [value, setValue] = useState(new Delta());
+
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (editor.current) {
@@ -51,13 +47,33 @@ const Editor = forwardRef((props: TEditor) => {
         };
     }, [editor.current]);
 
-    const changeHandler = (val: string, _changeDelta: Delta, _source: Sources, _editor: ReactQuill.UnprivilegedEditor) => {
+    useEffect(() => {
+        const quill = new Quill(document.createElement("div"));
+        const t = quill.clipboard.convert({
+            html: props.defaultValue as string,
+        }) as Delta;
+
+        if (!loaded) {
+            setValue(t);
+
+            console.log(t);
+        }
+
+        setLoaded(true);
+    }, [props.defaultValue]);
+
+    const changeHandler = (
+        val: string,
+        _changeDelta: Delta,
+        _source: Sources,
+        _editor: ReactQuill.UnprivilegedEditor
+    ) => {
         console.log(val);
-        console.log(JSON.stringify(quill?.getContents().ops, null, 2))
-        let fullDelta = quill?.getContents()
-        props.onChange(val || "")
-        setValue(fullDelta || new Delta())
-    }
+        console.log(JSON.stringify(quill?.getContents().ops, null, 2));
+        let fullDelta = quill?.getContents();
+        if (props.onChange) props.onChange(val || "");
+        if (loaded) setValue(fullDelta || new Delta());
+    };
 
     return (
         <div className="text-editor">
@@ -65,11 +81,7 @@ const Editor = forwardRef((props: TEditor) => {
                 value={value}
                 ref={editor}
                 modules={modules}
-
-
                 onChange={changeHandler}
-                
-                
                 theme="snow"
                 placeholder="Type your thoughts here..."
             />

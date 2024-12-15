@@ -4,6 +4,9 @@ SELECT * FROM users;
 -- name: GetUserById :one
 SELECT * FROM users WHERE user_id = $1;
 
+-- name: GetUserUsernameById :one
+SELECT username FROM users WHERE user_id = $1;
+
 -- name: GetUserByUsername :one
 SELECT * FROM users WHERE username = $1;
 

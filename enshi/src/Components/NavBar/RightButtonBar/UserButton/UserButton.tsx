@@ -7,14 +7,16 @@ import {
 import { DropdownMenu, Flex, IconButton, Text } from "@radix-ui/themes";
 import { Icon } from "@radix-ui/themes/dist/esm/components/callout.js";
 import { useAtomValue } from "jotai";
-import { userAtom } from "../../../AtomStore/AtomStore";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { userAtom } from "../../../../AtomStore/AtomStore";
 
 export default function UserButton() {
     const user = useAtomValue(userAtom);
+    const { t } = useTranslation();
 
     return (
-        <div className="flex justify-end flex-1">
+        <div className="">
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
                     <IconButton>
@@ -24,24 +26,26 @@ export default function UserButton() {
 
                 <DropdownMenu.Content className="w-fit">
                     <DropdownMenu.Item>
-                        <Link to={"/profile"}>
+                        <Link to={"/user/:user-id/profile"}>
                             <Flex className="justify-between gap-2">
                                 <Icon>
                                     <PersonIcon />
                                 </Icon>
 
-                                <Text>Profile</Text>
+                                <Text>{t("profile")}</Text>
                             </Flex>
                         </Link>
                     </DropdownMenu.Item>
 
                     <DropdownMenu.Item>
-                        <Flex className="justify-between gap-2">
-                            <Icon>
-                                <LaptopIcon />
-                            </Icon>
-                            <Text>Your blogs</Text>
-                        </Flex>
+                        <Link to={"/user/blogs"}>
+                            <Flex className="justify-between gap-2">
+                                <Icon>
+                                    <LaptopIcon />
+                                </Icon>
+                                <Text>{t("yourBlogs")}</Text>
+                            </Flex>
+                        </Link>
                     </DropdownMenu.Item>
 
                     <DropdownMenu.Separator />
@@ -52,15 +56,17 @@ export default function UserButton() {
                                 <Icon>
                                     <ExitIcon />
                                 </Icon>
-                                <Text>Log out</Text>
+                                <Text>{t("signOut")}</Text>
                             </Flex>
                         ) : (
-                            <Flex className="justify-between gap-2">
-                                <Icon>
-                                    <EnterIcon />
-                                </Icon>
-                                <Text>Log in</Text>
-                            </Flex>
+                            <Link to={"/login"}>
+                                <Flex className="justify-between gap-2">
+                                    <Icon>
+                                        <EnterIcon />
+                                    </Icon>
+                                    <Text>{t("signIn")}</Text>
+                                </Flex>
+                            </Link>
                         )}
                     </DropdownMenu.Item>
                 </DropdownMenu.Content>

@@ -13,6 +13,9 @@ const createPostVote = `-- name: CreatePostVote :one
 INSERT INTO public.post_votes
 (post_id, user_id, vote)
 VALUES($1, $2, $3)
+ON CONFLICT (user_id, post_id)
+DO UPDATE SET
+    vote = $3
 RETURNING post_id, user_id, vote
 `
 
@@ -60,6 +63,25 @@ func (q *Queries) GetPostVote(ctx context.Context, arg GetPostVoteParams) (bool,
 	var vote bool
 	err := row.Scan(&vote)
 	return vote, err
+}
+
+const getPostVotes = `-- name: GetPostVotes :one
+SELECT count (*) FILTER (WHERE vote = TRUE) as upvotes,
+count (*) FILTER (WHERE vote = FALSE) as downvotes
+FROM public.post_votes
+WHERE post_id = $1
+`
+
+type GetPostVotesRow struct {
+	Upvotes   int64 `json:"upvotes"`
+	Downvotes int64 `json:"downvotes"`
+}
+
+func (q *Queries) GetPostVotes(ctx context.Context, postID int64) (GetPostVotesRow, error) {
+	row := q.db.QueryRow(ctx, getPostVotes, postID)
+	var i GetPostVotesRow
+	err := row.Scan(&i.Upvotes, &i.Downvotes)
+	return i, err
 }
 
 const updateVote = `-- name: UpdateVote :one

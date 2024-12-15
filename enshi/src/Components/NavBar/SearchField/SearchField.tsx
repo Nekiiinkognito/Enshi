@@ -6,9 +6,9 @@ export default function SearchField() {
     const {t} = useTranslation()
 
     return (
-        <div className="flex-1">
+        <div className="flex justify-center flex-1">
             <TextField.Root
-                className="w-full rounded-lg"
+                className="w-2/3 rounded-lg"
                 placeholder={t("search")}
             >
                 <TextField.Slot>

@@ -10,6 +10,7 @@ import (
 	"enshi/global"
 	"enshi/hasher"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -118,5 +119,5 @@ func RegisterUser(c *gin.Context) {
 
 	transaction.Commit(context.Background())
 	rest_api_stuff.SetCookie(c, cookieParams)
-	rest_api_stuff.OkAnswer(c, "User has been created!")
+	c.IndentedJSON(http.StatusOK, gin.H{"status": "All good", "username": userParams.Username, "id": userParams.UserID})
 }
