@@ -110,3 +110,9 @@ func (m *MiddlewareProvider) GetMiddleware(
 	}
 
 }
+
+func (m *MiddlewareProvider) InitMiddlewareProvider(policies map[string]RulesToCheck) {
+	for middlewareName, rulesToCheck := range policies {
+		m.RegisterPolicy(middlewareName, rulesToCheck)
+	}
+}
