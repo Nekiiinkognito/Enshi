@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const axiosLocalhost = axios.create(
     {
-        baseURL: `http://127.0.0.1:9876/`,
+        baseURL: `https://localhost/api/v1/`,
         withCredentials: true,
         headers: {
             

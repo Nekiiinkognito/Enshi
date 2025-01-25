@@ -8,6 +8,9 @@ import (
 	"enshi/global"
 	"enshi/routes"
 	"fmt"
+	"io"
+	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,6 +30,14 @@ func main() {
 	defer db_connection.Dbx_connection.Close(context.Background())
 
 	router := gin.Default()
+
+	f, err := os.OpenFile("gin.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	gin.DefaultWriter = io.MultiWriter(f)
+
 	if err := routes.SetupRotes(router); err != nil {
 		fmt.Println(err.Error())
 		return
