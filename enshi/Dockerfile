@@ -2,6 +2,7 @@ FROM node:18-alpine as builder
 
 WORKDIR /app
 
+ENV VITE_ENV=docker
 COPY package*.json ./
 RUN npm ci
 COPY . .

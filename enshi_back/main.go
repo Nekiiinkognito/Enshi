@@ -43,7 +43,7 @@ func main() {
 		return
 	}
 
-	// Transaction
+	// Test Transaction
 	tx, _ := db_connection.Dbx.Begin(context.Background())
 	defer tx.Rollback(context.Background())
 
@@ -59,7 +59,7 @@ func main() {
 		return
 	}
 
-	router.Run(global.GinWorkPath)
+	router.Run(global.GetGinWorkPath())
 
 	fmt.Printf("Hey!, %v", "you")
 }

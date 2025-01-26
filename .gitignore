@@ -15,6 +15,7 @@ secret.env
 
 privkey.pem
 fullchain.pem
+gin.log
 
 # Editor directories and files
 .vscode/*
