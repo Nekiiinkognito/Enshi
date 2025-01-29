@@ -43,7 +43,36 @@ func testAuth(c *gin.Context) {
 }
 
 func SetupRotes(g *gin.Engine) error {
+	InitMiddlewareProvider()
+
 	g.Use(middleware.CORSMiddleware())
+	g.Use(middleware.TargetMiddleware())
+
+	testGroup := g.Group("/test/")
+	testGroup.Use(MiddlewareProvider.GetMiddleware(POST_MIDDLEWARE))
+
+	testGroup.GET(
+		"posts/:post-id",
+		postsRoutes.GetPost,
+	)
+
+	testGroup.GET(
+		"posts/random",
+		postsRoutes.GetRandomPost,
+	)
+
+	testGroup.PUT(
+		"posts/:post-id",
+		postsRoutes.UpdatePost,
+	)
+	testGroup.POST(
+		"posts",
+		postsRoutes.CreatePost,
+	)
+	testGroup.DELETE(
+		"posts/:post-id",
+		postsRoutes.DeletePost,
+	)
 
 	// Free group routes
 	freeGroup := g.Group("/")
