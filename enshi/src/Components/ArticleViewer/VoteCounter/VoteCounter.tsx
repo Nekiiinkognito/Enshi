@@ -8,13 +8,14 @@ type TVoteCounter = {
 
 export default function VoteCounter(props: TVoteCounter) {
     const { data, isLoading } = useQuery({
-        queryKey: ["post_vote_counter"],
+        queryKey: [`post_vote_counter_${props.postId}` ],
         queryFn: async () => {
             const response = await axiosLocalhost.get(
                 `post-votes/${props.postId}`
             );
             return response.data as { upvotes: number; downvotes: number };
         },
+        gcTime: 1000 * 60, 
     });
 
     const calculateRating = (upvotes: number, downvotes: number) => {
@@ -22,12 +23,12 @@ export default function VoteCounter(props: TVoteCounter) {
     }
 
     if (isLoading) {
-        return <Skeleton>
+        return <Skeleton className="w-4">
             {calculateRating(0, 0)}
         </Skeleton>
     }
 
-    return <Box>
+    return <Box className="flex justify-center w-4 gap-2">
         {calculateRating(data?.upvotes || 0, data?.downvotes || 0)}
     </Box>;
 }

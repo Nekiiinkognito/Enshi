@@ -48,7 +48,7 @@ export default function VoteButton(props: TVoteButton) {
                 queryKey: [props.vote + "voteCheck"],
             });
             queryClient.invalidateQueries({
-                queryKey: ["post_vote_counter"],
+                queryKey: [`post_vote_counter_${props.postId}`],
             });
         },
     });
