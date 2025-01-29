@@ -123,7 +123,7 @@ func SetupRotes(g *gin.Engine) error {
 	)
 
 	blogGroup := g.Group("/")
-	blogGroup.Use(middleware.BlogsMiddleware())
+	blogGroup.Use(MiddlewareProvider.GetMiddleware(BLOG_MIDDLEWARE))
 
 	blogGroup.POST(
 		"blogs",
