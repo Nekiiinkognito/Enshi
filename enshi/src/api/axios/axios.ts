@@ -2,7 +2,7 @@ import axios from "axios";
 
 const environment = import.meta.env.VITE_ENV || 'development';
 // const environment = "docker"
-const baseURL = environment === "docker" ? "https://localhost/api/v1/" : "http://localhost:9876/";
+const baseURL = environment === "docker" ? "https://localhost/api/v1/" : "http://127.0.0.1:9876/";
 
 export const axiosLocalhost = axios.create(
     {
