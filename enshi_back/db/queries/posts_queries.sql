@@ -21,10 +21,22 @@ RETURNING *;
 
 -- name: UpdatePostByPostId :one
 UPDATE public.posts
-SET blog_id=$1, user_id=$2, title=$3, "content"=$4, updated_at=CURRENT_TIMESTAMP
-WHERE post_id = $5
+SET title=$1, "content"=$2, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $3
 RETURNING *;
 
 -- name: DeletePostByPostId :exec
 DELETE FROM public.posts
 WHERE post_id=$1;
+
+-- name: UpdatePostBlogId :exec
+UPDATE public.posts
+SET blog_id=$2, updated_at=CURRENT_TIMESTAMP
+WHERE post_id = $1
+RETURNING *;
+
+-- name: GetRandomPosts :many
+SELECT post_id, blog_id, user_id, title, created_at
+FROM public.posts
+ORDER BY RANDOM()
+LIMIT $1;

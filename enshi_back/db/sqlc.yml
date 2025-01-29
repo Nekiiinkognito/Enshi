@@ -18,6 +18,9 @@ sql:
           - column: users.email
             go_struct_tag: validate:"required,email"
 
+          - column: blogs.title
+            go_struct_tag: validate:"required"
+
           - db_type: "uuid"
             go_type:
               import: 'github.com/google/uuid'

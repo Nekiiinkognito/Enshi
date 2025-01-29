@@ -1,0 +1,25 @@
+services:
+
+  nginx:
+    build: ./enshi
+    ports:
+      - 127.0.0.1:80:80
+      - 127.0.0.1:443:443
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  enshi_back:
+    build: ./enshi_back
+    ports:
+      - 127.0.0.1:9876:9876
+    networks:
+      - app-network
+    environment:
+      - ENV=docker
+      - DOMAIN=localhost
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

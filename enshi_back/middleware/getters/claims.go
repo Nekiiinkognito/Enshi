@@ -3,7 +3,6 @@ package getters
 import (
 	"enshi/auth"
 	"enshi/global"
-	"enshi/middleware"
 	"fmt"
 	"strconv"
 
@@ -14,7 +13,7 @@ import (
 func GetClaimsFromContext(c *gin.Context) (auth.UserInfoJWT, error) {
 	var UserInfo auth.UserInfoJWT
 
-	claims, exists := c.Get(middleware.ContextTokenData)
+	claims, exists := c.Get(global.ContextTokenData)
 
 	if !exists {
 		return auth.UserInfoJWT{}, fmt.Errorf("error getting user id")
@@ -31,13 +30,8 @@ func GetClaimsFromContext(c *gin.Context) (auth.UserInfoJWT, error) {
 
 	UserInfo.Id = parsedUserId
 	UserInfo.Username = claims.(jwt.MapClaims)["username"].(string)
-	isAdmin, err := strconv.ParseBool(claims.(jwt.MapClaims)["isAdmin"].(string))
-	if err != nil {
-		UserInfo.IsAdmin = false
-		fmt.Println(global.RedColor + "isAdmin prop corrupted" + global.ResetColor)
-	} else {
-		UserInfo.IsAdmin = isAdmin
-	}
+	isAdmin := claims.(jwt.MapClaims)["isAdmin"].(bool)
+	UserInfo.IsAdmin = isAdmin
 
 	return UserInfo, nil
 

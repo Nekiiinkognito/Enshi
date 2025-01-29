@@ -15,6 +15,11 @@ SELECT *
 FROM public.blogs
 WHERE user_id = $1;
 
+-- name: GetBlogByBlogId :one
+SELECT *
+FROM public.blogs
+WHERE blog_id = $1;
+
 -- name: DeleteBlogByBlogId :exec
 DELETE FROM public.blogs
 WHERE blog_id=$1;

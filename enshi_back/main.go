@@ -5,8 +5,12 @@ import (
 	db_repo "enshi/db/go_queries"
 	"enshi/db_connection"
 	"enshi/env"
-	utils "enshi/utils"
+	"enshi/global"
+	"enshi/routes"
 	"fmt"
+	"io"
+	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,12 +30,20 @@ func main() {
 	defer db_connection.Dbx_connection.Close(context.Background())
 
 	router := gin.Default()
-	if err := utils.SetupRotes(router); err != nil {
+
+	f, err := os.OpenFile("gin.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	gin.DefaultWriter = io.MultiWriter(f)
+
+	if err := routes.SetupRotes(router); err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	// Transaction
+	// Test Transaction
 	tx, _ := db_connection.Dbx.Begin(context.Background())
 	defer tx.Rollback(context.Background())
 
@@ -47,7 +59,7 @@ func main() {
 		return
 	}
 
-	router.Run("localhost:9876")
+	router.Run(global.GetGinWorkPath())
 
 	fmt.Printf("Hey!, %v", "you")
 }
