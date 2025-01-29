@@ -13,7 +13,7 @@ const router = createBrowserRouter(routes);
 
 export default function App() {
     return (
-        <Theme className="h-fit" accentColor="indigo" grayColor="slate">
+        <Theme className="h-fit" accentColor="indigo" grayColor="slate" appearance="dark">
             <ToastProvider>
                 <QueryClientProvider client={queryClient}>
                     <RouterProvider router={router} />
