@@ -8,6 +8,8 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+    volumes:
+      - /etc/letsencrypt/live/nekiiinkognito.ru:/etc/nginx/ssl:ro
 
   enshi_back:
     build: ./enshi_back
