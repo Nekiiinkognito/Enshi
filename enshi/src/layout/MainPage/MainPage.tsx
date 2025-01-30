@@ -58,6 +58,7 @@ export default function MainPage() {
                 </div>
             ) : (
                 <Flex
+                    id="mainFlex"
                     direction={"column"}
                     className="min-h-[100vh] max-h-[100vh] overflow-hidden"
                 >

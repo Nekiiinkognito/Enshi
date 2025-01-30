@@ -1,13 +1,24 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Button, Card, Flex, Select, Text, Theme } from "@radix-ui/themes";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Blog } from "../../../@types/BlogTypes";
 import { axiosLocalhost } from "../../../api/axios/axios";
+import { userAtom } from "../../../AtomStore/AtomStore";
+import useToast from "../../../hooks/useToast";
 import { JSONWithInt64 } from "../../../utils/idnex";
 
 export default function AddPostToBlogDialog() {
+    const navigate = useNavigate();
+
+    const user = useAtomValue(userAtom);
+    const [selectedBlog, setSelectedBlog] = useState<string>("");
+
+    const createToast = useToast()
+
     const { data } = useQuery({
         queryKey: ["userBlogs"],
         queryFn: async () => {
@@ -21,13 +32,34 @@ export default function AddPostToBlogDialog() {
         },
     });
 
-    const [selectedBlog, setSelectedBlog] = useState<string>("");
+    const addMutation = useMutation({
+        mutationKey: ["addPostToBlog"],
+        mutationFn: async () => {
+            
+        },
+        onError: (error) => {
+            console.error(error);
+            createToast({title: "Error!", description: "Post have not been added"})
+        },
+        onSuccess: () => {
+            console.log("Post added successfully");
+            createToast({title: "Success!", description: "Post added successfully"})
+        },
+        onSettled: () => {
+            console.log("Add mutation is settled");
+        },
+    });
+
+    if (!user) {
+        navigate("/login");
+        return null;
+    }
 
     return (
         <Dialog.Root>
             <Dialog.Trigger asChild>
                 <Button variant="surface" className="h-5">
-                    Add to blog
+                    <Text>Add to blog</Text>
                 </Button>
             </Dialog.Trigger>
             <Dialog.Portal>
@@ -36,18 +68,26 @@ export default function AddPostToBlogDialog() {
                     <Theme>
                         <Card>
                             <Dialog.Title className="m-0 text-[17px] font-medium text-mauve12">
-                                Add this post to blog
+                                <Text size={"4"}>Add this post to blog</Text>
                             </Dialog.Title>
                             <Dialog.Description className="mb-5 mt-2.5 text-[15px] leading-normal text-mauve11">
                                 <Flex gap={"2"} align={"center"}>
                                     <Text>{`Add post to `}</Text>
-                                    <Select.Root>
-                                        <Select.Trigger className="w-40"/>
+                                    <Select.Root
+                                        value={selectedBlog}
+                                        onValueChange={(e) =>
+                                            setSelectedBlog(e)
+                                        }
+                                    >
+                                        <Select.Trigger className="w-40 cursor-pointer" />
                                         <Select.Content>
                                             <Select.Group>
                                                 {data?.map((blog, i) => {
                                                     return (
-                                                        <Select.Item key={i} value={`${blog.blog_id}`}>
+                                                        <Select.Item
+                                                            key={i}
+                                                            value={`${blog.blog_id}`}
+                                                        >
                                                             {blog.title}
                                                         </Select.Item>
                                                     );
@@ -60,8 +100,10 @@ export default function AddPostToBlogDialog() {
 
                             <div className="mt-[25px] flex justify-end">
                                 <Dialog.Close asChild>
-                                    <Button variant="outline" color="green">
-                                        Confirm
+                                    <Button
+                                        className="cursor-pointer"
+                                    >
+                                        <Text>Confirm</Text>
                                     </Button>
                                 </Dialog.Close>
                             </div>
