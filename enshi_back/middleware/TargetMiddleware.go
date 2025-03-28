@@ -22,7 +22,7 @@ func TargetMiddleware() gin.HandlerFunc {
 		case "POST":
 			c.Set("target", POST)
 		case "GET":
-			c.Set("target", DELETE)
+			c.Set("target", GET)
 		}
 
 		c.Next()
